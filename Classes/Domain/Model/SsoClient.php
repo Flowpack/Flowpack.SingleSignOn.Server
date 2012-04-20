@@ -18,21 +18,23 @@ class SsoClient implements SsoInstanceInterface {
 
 	/**
 	 * The identifier
+	 * @ORM\Id
+	 * @FLOW3\Identity
 	 * @var string
 	 */
 	protected $identifier;
 
 	/**
-	 * The public key
+	 * The public key (uuid)
 	 * @var string
 	 */
-	protected $publicKey;
+	protected $publicKey = '';
 
 	/**
-	 * The private key
+	 * The private key (uuid)
 	 * @var string
 	 */
-	protected $privateKey;
+	protected $privateKey = '';
 
 
 	/**

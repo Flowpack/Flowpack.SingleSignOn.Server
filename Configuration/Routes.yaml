@@ -1,0 +1,29 @@
+#                                                                        #
+# Default subroutes configuration for the FLOW3 package                  #
+#                                                                        #
+
+##
+# Default route to the FLOW3 Authentication Controller
+
+-
+  name: 'SSO authentication with action'
+  uriPattern: 'authentication/{@action}'
+  defaults:
+    '@package':    'TYPO3.SingleSignOn'
+    '@controller': 'Authentication'
+
+-
+  name: 'SSO authentication'
+  uriPattern: 'authentication'
+  defaults:
+    '@package':    'TYPO3.SingleSignOn'
+    '@controller': 'Authentication'
+    '@action':     'authenticate'
+
+-
+  name: 'Login with optional action'
+  uriPattern: 'login(/{@action})'
+  defaults:
+    '@package':    'TYPO3.SingleSignOn'
+    '@controller': 'Login'
+    '@action':     'index'
