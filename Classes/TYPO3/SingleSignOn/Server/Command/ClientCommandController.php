@@ -22,6 +22,12 @@ class ClientCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $ssoClientRepository;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface
+	 */
+	protected $rsaWalletService;
+
+	/**
 	 * Add a client
 	 *
 	 * @param string $identifier This argument is required
@@ -29,6 +35,12 @@ class ClientCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @return void
 	 */
 	public function addCommand($identifier, $publicKey) {
+		try {
+			$this->rsaWalletService->getPublicKey($publicKey);
+		} catch(\TYPO3\Flow\Security\Exception\InvalidKeyPairIdException $exception) {
+			$this->outputLine('Invalid public key uuid: ' . $publicKey);
+		}
+
 		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
 		$ssoClient->setIdentifier($identifier);
 		$ssoClient->setPublicKey($publicKey);

@@ -44,13 +44,16 @@ class UrlService {
 	public function verifyLoginUrl($uri, $argumentName, $signature, $ssoClientIdentifier) {
 		$uri = clone $uri;
 		$arguments = $uri->getArguments();
-		unset($arguments['signature']);
+		unset($arguments[$argumentName]);
+		if (isset($arguments['__csrfToken'])) {
+			unset($arguments['__csrfToken']);
+		}
 		$uri->setQuery(http_build_query($arguments));
 		$originalUri = (string)$uri;
 
 		$ssoClient = $this->ssoClientRepository->findByIdentifier($ssoClientIdentifier);
 		if ($ssoClient === NULL) {
-			throw new \TYPO3\Flow\Exception('Could not find client with identifier "' . $ssoClientIdentifier . '"', 1334940432);
+			throw new \TYPO3\SingleSignOn\Server\Exception\ClientNotFoundException('Could not find client with identifier "' . $ssoClientIdentifier . '"', 1334940432);
 		}
 		return $this->rsaWalletService->verifySignature($originalUri, $signature, $ssoClient->getPublicKey());
 	}
