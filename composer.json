@@ -1,0 +1,14 @@
+{
+	"name": "typo3\/singlesignon-server",
+	"type": "typo3-flow-package",
+	"description": "TYPO3 SingleSignOn Server",
+	"require": {
+		"typo3\/flow": "*",
+		"typo3\/singlesignon-client": "*"
+	},
+	"autoload": {
+		"psr-0": {
+			"TYPO3\\SingleSignOn\\Server": "Classes"
+		}
+	}
+}

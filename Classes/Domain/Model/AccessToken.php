@@ -1,23 +1,27 @@
 <?php
-namespace TYPO3\SingleSignOn\Domain\Model;
+namespace TYPO3\SingleSignOn\Server\Domain\Model;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3.SingleSignOn".         *
+ * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A Access token
+ * SSO Access Token
  *
- * @FLOW3\Entity
+ * A client bound one-time key to transfer the session id in a safe manner.
+ *
+ * @Flow\Entity
  */
 class AccessToken {
 
 	/**
 	 * The identifier
+	 * @ORM\Id
+	 * @Flow\Identity
 	 * @var string
 	 */
 	protected $identifier;
@@ -29,19 +33,17 @@ class AccessToken {
 	protected $expiryTime;
 
 	/**
-	 * The authentication session
-	 * @ORM\ManyToOne
-	 * @var \TYPO3\SingleSignOn\Domain\Model\AuthenticationSession
+	 * The session id
+	 * @var string
 	 */
-	protected $authenticationSession;
+	protected $sessionId;
 
 	/**
-	 * The sso client
+	 * The SSO client that initiated the request
 	 * @ORM\ManyToOne
-	 * @var \TYPO3\SingleSignOn\Domain\Model\SsoClient
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient
 	 */
 	protected $ssoClient;
-
 
 	/**
 	 * Get the Access token's identifier
@@ -82,28 +84,23 @@ class AccessToken {
 	}
 
 	/**
-	 * Get the Access token's authentication session
-	 *
-	 * @return \TYPO3\SingleSignOn\Domain\Model\AuthenticationSession The Access token's authentication session
+	 * @param string $sessionId
 	 */
-	public function getAuthenticationSession() {
-		return $this->authenticationSession;
+	public function setSessionId($sessionId) {
+		$this->sessionId = $sessionId;
 	}
 
 	/**
-	 * Sets this Access token's authentication session
-	 *
-	 * @param \TYPO3\SingleSignOn\Domain\Model\AuthenticationSession $authenticationSession The Access token's authentication session
-	 * @return void
+	 * @return string
 	 */
-	public function setAuthenticationSession($authenticationSession) {
-		$this->authenticationSession = $authenticationSession;
+	public function getSessionId() {
+		return $this->sessionId;
 	}
 
 	/**
 	 * Get the Access token's sso client
 	 *
-	 * @return \TYPO3\SingleSignOn\Domain\Model\SsoClient The Access token's sso client
+	 * @return \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient The Access token's sso client
 	 */
 	public function getSsoClient() {
 		return $this->ssoClient;
@@ -112,7 +109,7 @@ class AccessToken {
 	/**
 	 * Sets this Access token's sso client
 	 *
-	 * @param \TYPO3\SingleSignOn\Domain\Model\SsoClient $ssoClient The Access token's sso client
+	 * @param \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient The Access token's sso client
 	 * @return void
 	 */
 	public function setSsoClient($ssoClient) {

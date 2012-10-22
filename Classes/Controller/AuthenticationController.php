@@ -1,34 +1,38 @@
 <?php
-namespace TYPO3\SingleSignOn\Controller;
+namespace TYPO3\SingleSignOn\Server\Controller;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3.SingleSignOn".         *
+ * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Single sign-on authentication endpoint
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
-class AuthenticationController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
+class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\SingleSignOn\Domain\Service\UrlService
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\UrlService
 	 */
 	protected $urlService;
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Security\Authentication\AuthenticationManagerInterface
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
 	 */
 	protected $authenticationManager;
 
 	/**
-	 * Index action
+	 * Authenticate action
+	 *
+	 * - Verifies the given arguments
+	 * - Authenticates the request using the local authentication provider
+	 * - Redirects to the given callbackUrl with a generated access token
 	 *
 	 * @param string $ssoClientIdentifier
 	 * @param string $callbackUrl
@@ -40,7 +44,7 @@ class AuthenticationController extends \TYPO3\FLOW3\Mvc\Controller\ActionControl
 
 		$isUrlValid = $this->urlService->verifyLoginUrl($uri, 'signature', $signature, $ssoClientIdentifier);
 		if (!$isUrlValid) {
-			throw new \TYPO3\FLOW3\Exception('Could not verify URI', 1334937360);
+			throw new \TYPO3\Flow\Exception('Could not verify URI', 1334937360);
 		}
 
 			// This should set the intercepted request inside the security context

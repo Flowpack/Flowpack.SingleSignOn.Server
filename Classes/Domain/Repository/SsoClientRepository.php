@@ -1,21 +1,19 @@
 <?php
-namespace TYPO3\SingleSignOn\Domain\Repository;
+namespace TYPO3\SingleSignOn\Server\Domain\Repository;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3.SingleSignOn".         *
+ * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as FLOW3;
 
 /**
- * A repository for SsoClients
+ * A repository for SSO Clients
  *
  * @FLOW3\Scope("singleton")
  */
-class SsoClientRepository extends \TYPO3\FLOW3\Persistence\Repository {
-
-	// add customized methods here
+class SsoClientRepository extends \TYPO3\Flow\Persistence\Repository {
 
 }
 ?>

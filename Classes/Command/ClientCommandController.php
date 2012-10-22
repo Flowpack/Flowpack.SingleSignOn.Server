@@ -1,23 +1,23 @@
 <?php
-namespace TYPO3\SingleSignOn\Command;
+namespace TYPO3\SingleSignOn\Server\Command;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3.SingleSignOn".         *
+ * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
- * Client command controller for the TYPO3.SingleSignOn package
+ * Command controller to manage SSO Clients
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
-class ClientCommandController extends \TYPO3\FLOW3\Cli\CommandController {
+class ClientCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\SingleSignOn\Domain\Repository\SsoClientRepository
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository
 	 */
 	protected $ssoClientRepository;
 
@@ -25,11 +25,11 @@ class ClientCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 	 * Add a client
 	 *
 	 * @param string $identifier This argument is required
-	 * @param string $publicKey The public key uuid
+	 * @param string $publicKey The public key uuid (has to be imported using the wallet service first)
 	 * @return void
 	 */
 	public function addCommand($identifier, $publicKey) {
-		$ssoClient = new \TYPO3\SingleSignOn\Domain\Model\SsoClient();
+		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
 		$ssoClient->setIdentifier($identifier);
 		$ssoClient->setPublicKey($publicKey);
 		$this->ssoClientRepository->add($ssoClient);
