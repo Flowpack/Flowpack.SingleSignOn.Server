@@ -56,7 +56,7 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 
 		$isUrlValid = $this->urlService->verifyLoginUrl($uri, 'signature', $signature, $ssoClientIdentifier);
 		if (!$isUrlValid) {
-			throw new \TYPO3\Flow\Exception('Could not verify URI', 1334937360);
+			throw new \TYPO3\Flow\Exception('Could not verify URI "' . $uri . '"', 1334937360);
 		}
 
 			// This should set the intercepted request inside the security context

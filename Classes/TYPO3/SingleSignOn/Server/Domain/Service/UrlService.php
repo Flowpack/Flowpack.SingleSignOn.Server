@@ -43,6 +43,7 @@ class UrlService {
 
 	/**
 	 * @param string $ssoClientIdentifier
+	 * @param \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken $accessToken
 	 * @param string $callbackUrl
 	 * @return \TYPO3\Flow\Http\Uri
 	 */
@@ -56,8 +57,12 @@ class UrlService {
 		$signature = $this->rsaWalletService->sign($accessTokenCipher, $this->ssoServerKeyPairUuid);
 
 		$uri = new \TYPO3\Flow\Http\Uri($callbackUrl);
-		// TODO Implement adding to existing query
-		$uri->setQuery('__typo3[singlesignon][accessToken]=' . urlencode(base64_encode($accessTokenCipher)) . '&__typo3[singlesignon][signature]=' . urlencode(base64_encode($signature)));
+		$query = $uri->getQuery();
+		if ($query !== '') {
+			$query = $query . '&';
+		}
+		$query .= '__typo3[singlesignon][accessToken]=' . urlencode(base64_encode($accessTokenCipher)) . '&__typo3[singlesignon][signature]=' . urlencode(base64_encode($signature));
+		$uri->setQuery($query);
 		return $uri;
 	}
 
@@ -82,6 +87,7 @@ class UrlService {
 		if ($ssoClient === NULL) {
 			throw new \TYPO3\SingleSignOn\Server\Exception\ClientNotFoundException('Could not find client with identifier "' . $ssoClientIdentifier . '"', 1334940432);
 		}
+		// TODO Check if RsaWalletService has a key stored for the fingerprint, e.g. import or use public key string from client
 		return $this->rsaWalletService->verifySignature($originalUri, base64_decode($signature), $ssoClient->getPublicKey());
 	}
 
