@@ -23,9 +23,21 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 
 	/**
 	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository
+	 */
+	protected $accessTokenRepository;
+
+	/**
+	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
 	 */
 	protected $authenticationManager;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Session\SessionInterface
+	 */
+	protected $session;
 
 	/**
 	 * Authenticate action
@@ -51,7 +63,14 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 			// TODO Prevent loops
 		$this->authenticationManager->authenticate();
 
-		return 'Yeah, authenticated! Got to: ' . $callbackUrl;
+			// TODO Move this logic to a domain service
+		$accessToken = new \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken();
+		$this->accessTokenRepository->add($accessToken);
+		$accessToken->setExpiryTime(time() + 60);
+		$accessToken->setSessionId($this->session->getId());
+
+		$redirectUri = $this->urlService->buildCallbackRedirectUrl($ssoClientIdentifier, $accessToken, $callbackUrl);
+		$this->redirectToUri($redirectUri);
 	}
 
 }

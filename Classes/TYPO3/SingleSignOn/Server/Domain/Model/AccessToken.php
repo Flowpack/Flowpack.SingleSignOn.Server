@@ -46,6 +46,14 @@ class AccessToken {
 	protected $ssoClient;
 
 	/**
+	 * Generate an access token with UUID as identifier
+	 */
+	public function __construct() {
+		// TODO Use more secure generation of identifier
+		$this->identifier = \TYPO3\Flow\Utility\Algorithms::generateUUID();
+	}
+
+	/**
 	 * Get the Access token's identifier
 	 *
 	 * @return string The Access token's identifier

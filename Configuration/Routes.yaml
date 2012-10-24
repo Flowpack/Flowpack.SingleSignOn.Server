@@ -1,17 +1,12 @@
 -
   name: 'SSO authentication with action'
-  uriPattern: 'authentication/{@action}'
-  defaults:
-    '@package':    'TYPO3.SingleSignOn.Server'
-    '@controller': 'Authentication'
-
--
-  name: 'SSO authentication'
-  uriPattern: 'authentication'
+  uriPattern: 'authentication(/{@action})'
   defaults:
     '@package':    'TYPO3.SingleSignOn.Server'
     '@controller': 'Authentication'
     '@action':     'authenticate'
+    '@format':     'html'
+  appendExceedingArguments: TRUE
 
 -
   name: 'Login with optional action'
