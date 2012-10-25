@@ -69,7 +69,7 @@ class UrlService {
 	/**
 	 * @param \TYPO3\Flow\Http\Uri $uri
 	 * @param string $argumentName
-	 * @param string $signature Base64 encoded signature of the URI with arguments (excluding the signature)
+	 * @param string $signature Base64 encoded signature of the URI with arguments (excluding the signature argument)
 	 * @param string $ssoClientIdentifier
 	 * @return boolean
 	 */

@@ -6,6 +6,9 @@
 		"typo3\/flow": "*",
 		"typo3\/singlesignon-client": "*"
 	},
+	"require-dev": {
+		"mockery/mockery": "0.7.*"
+    },
 	"autoload": {
 		"psr-0": {
 			"TYPO3\\SingleSignOn\\Server": "Classes"
