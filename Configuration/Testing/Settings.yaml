@@ -5,7 +5,7 @@ TYPO3:
       ssoServerKeyPairUuid: 'bb5abb57faa122cc031e3c904db3d751'
     Client:
       ssoClientIdentifier: 'client-01'
-      ssoServerEndpointUrl: 'http://ssoserver/test/sso/authentication'
+      ssoServerEndpointUri: 'http://ssoserver/test/sso/authentication'
       ssoClientKeyPairUuid: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
       ssoServerPublicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
   Flow:
