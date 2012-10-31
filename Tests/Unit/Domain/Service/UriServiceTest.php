@@ -10,18 +10,18 @@ use \TYPO3\Flow\Http\Uri;
 use \Mockery as m;
 
 /**
- * Unit test for UrlService
+ * Unit test for UriService
  */
-class UrlServiceTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class UriServiceTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 */
-	public function verifyLoginUrlRemovesSignatureAndCsrfTokenFromUriForVerification() {
-		$endpointUri = new Uri('http://ssoserver/sso/authentication?foo=bar&callbackUrl=abc&clientIdentifier=client-01&signature=xyz&__csrfToken=123');
+	public function verifyLoginUriRemovesSignatureAndCsrfTokenFromUriForVerification() {
+		$endpointUri = new Uri('http://ssoserver/sso/authentication?foo=bar&callbackUri=abc&clientIdentifier=client-01&signature=xyz&__csrfToken=123');
 		$clientIdentifier = 'client-01';
 
-		$urlService = new \TYPO3\SingleSignOn\Server\Domain\Service\UrlService();
+		$uriService = new \TYPO3\SingleSignOn\Server\Domain\Service\UriService();
 
 		$ssoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient', array(
 			'getPublicKey' => 'client-public-key-fingerprint'
@@ -30,15 +30,15 @@ class UrlServiceTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'findByIdentifier' => $ssoClient
 		));
 		$rsaWalletService = m::mock('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');
-		$this->inject($urlService, 'ssoClientRepository', $ssoClientRepository);
-		$this->inject($urlService, 'rsaWalletService', $rsaWalletService);
+		$this->inject($uriService, 'ssoClientRepository', $ssoClientRepository);
+		$this->inject($uriService, 'rsaWalletService', $rsaWalletService);
 
 		$rsaWalletService
 			->shouldReceive('verifySignature')
-			->with('http://ssoserver/sso/authentication?foo=bar&callbackUrl=abc&clientIdentifier=client-01', m::any(), m::any())
+			->with('http://ssoserver/sso/authentication?foo=bar&callbackUri=abc&clientIdentifier=client-01', m::any(), m::any())
 			->andReturn(TRUE)->once();
 
-		$urlService->verifyLoginUrl($endpointUri, 'signature', base64_encode('xyz'), $clientIdentifier);
+		$uriService->verifyLoginUri($endpointUri, 'signature', base64_encode('xyz'), $clientIdentifier);
 	}
 
 	/**

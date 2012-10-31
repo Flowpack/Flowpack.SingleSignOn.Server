@@ -17,9 +17,9 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\UrlService
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\UriService
 	 */
-	protected $urlService;
+	protected $uriService;
 
 	/**
 	 * @Flow\Inject
@@ -44,18 +44,18 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 	 *
 	 * - Verifies the given arguments
 	 * - Authenticates the request using the local authentication provider
-	 * - Redirects to the given callbackUrl with a generated access token
+	 * - Redirects to the given callbackUri with a generated access token
 	 *
 	 * @param string $ssoClientIdentifier
-	 * @param string $callbackUrl
+	 * @param string $callbackUri
 	 * @param string $signature
 	 * @return void
 	 */
-	public function authenticateAction($ssoClientIdentifier, $callbackUrl, $signature) {
+	public function authenticateAction($ssoClientIdentifier, $callbackUri, $signature) {
 		$uri = $this->request->getHttpRequest()->getUri();
 
-		$isUrlValid = $this->urlService->verifyLoginUrl($uri, 'signature', $signature, $ssoClientIdentifier);
-		if (!$isUrlValid) {
+		$isUriValid = $this->uriService->verifyLoginUri($uri, 'signature', $signature, $ssoClientIdentifier);
+		if (!$isUriValid) {
 			throw new \TYPO3\Flow\Exception('Could not verify URI "' . $uri . '"', 1334937360);
 		}
 
@@ -69,7 +69,7 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 		$accessToken->setExpiryTime(time() + 60);
 		$accessToken->setSessionId($this->session->getId());
 
-		$redirectUri = $this->urlService->buildCallbackRedirectUrl($ssoClientIdentifier, $accessToken, $callbackUrl);
+		$redirectUri = $this->uriService->buildCallbackRedirectUri($ssoClientIdentifier, $accessToken, $callbackUri);
 		$this->redirectToUri($redirectUri);
 	}
 

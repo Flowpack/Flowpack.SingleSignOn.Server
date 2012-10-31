@@ -35,9 +35,9 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	protected $ssoClientRepository;
 
 	/**
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\UrlService
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\UriService
 	 */
-	protected $serverUrlService;
+	protected $serverUriService;
 
 	/**
 	 * Register fixture key pairs
@@ -53,7 +53,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->rsaWalletService->registerKeyPairFromPrivateKeyString($privateKeyString);
 
 		$this->ssoClientRepository = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository');
-		$this->serverUrlService = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Service\UrlService');
+		$this->serverUriService = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Service\UriService');
 	}
 
 	/**
@@ -73,7 +73,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->assertEquals('/test/sso/authentication', $redirectUri->getPath());
 
 		$arguments = $redirectUri->getArguments();
-		$this->assertEquals('http://ssoinstance/secured', $arguments['callbackUrl']);
+		$this->assertEquals('http://ssoinstance/secured', $arguments['callbackUri']);
 		$this->assertEquals('client-01', $arguments['ssoClientIdentifier']);
 		$this->assertNotEquals('', $arguments['signature']);
 	}
@@ -84,7 +84,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 * @test
 	 * @depends entryPointRedirectsToEndpointWithSsoArguments
 	 */
-	public function ssoEndpointWithAuthenticatedAccountRedirectsToCallbackUrl() {
+	public function ssoEndpointWithAuthenticatedAccountRedirectsToCallbackUri() {
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('testuser');
 		$account->setRoles(array('User'));
@@ -99,7 +99,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 		$this->persistenceManager->persistAll();
 
-			// Create URL to SSO endpoint
+			// Create URI to SSO endpoint
 		$request = Request::create(new Uri('http://ssoinstance/test/secured?foo=bar'), 'GET');
 		$response = new Response();
 
@@ -149,7 +149,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$accessToken->setSessionId('random-test-sessionid');
 		$accessToken->setSsoClient($client);
 
-		$callbackUri = $this->serverUrlService->buildCallbackRedirectUrl('client-01', $accessToken, 'http://ssoinstance/test/secured');
+		$callbackUri = $this->serverUriService->buildCallbackRedirectUri('client-01', $accessToken, 'http://ssoinstance/test/secured');
 
 		$callbackRequest = Request::create($callbackUri);
 		$callbackActionRequest = new \TYPO3\Flow\Mvc\ActionRequest($callbackRequest);

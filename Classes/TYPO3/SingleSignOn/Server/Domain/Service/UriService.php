@@ -8,13 +8,14 @@ namespace TYPO3\SingleSignOn\Server\Domain\Service;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\SingleSignOn\Server\Domain\Model\AccessToken;
+use TYPO3\Flow\Http\Uri;
 
 /**
- * URL service for building single sign-on URLs for the server
+ * URI service for building single sign-on URIs for the server
  *
  * @Flow\Scope("singleton")
  */
-class UrlService {
+class UriService {
 
 	/**
 	 * @Flow\Inject
@@ -42,12 +43,14 @@ class UrlService {
 	}
 
 	/**
+	 *
+	 *
 	 * @param string $ssoClientIdentifier
 	 * @param \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken $accessToken
-	 * @param string $callbackUrl
+	 * @param string $callbackUri
 	 * @return \TYPO3\Flow\Http\Uri
 	 */
-	public function buildCallbackRedirectUrl($ssoClientIdentifier, AccessToken $accessToken, $callbackUrl) {
+	public function buildCallbackRedirectUri($ssoClientIdentifier, AccessToken $accessToken, $callbackUri) {
 		$ssoClient = $this->ssoClientRepository->findByIdentifier($ssoClientIdentifier);
 		if ($ssoClient === NULL) {
 			throw new \TYPO3\SingleSignOn\Server\Exception\ClientNotFoundException('Could not find client with identifier "' . $ssoClientIdentifier . '"', 1334940432);
@@ -56,7 +59,7 @@ class UrlService {
 		$accessTokenCipher = $this->rsaWalletService->encryptWithPublicKey($accessToken->getIdentifier(), $ssoClient->getPublicKey());
 		$signature = $this->rsaWalletService->sign($accessTokenCipher, $this->ssoServerKeyPairUuid);
 
-		$uri = new \TYPO3\Flow\Http\Uri($callbackUrl);
+		$uri = new Uri($callbackUri);
 		$query = $uri->getQuery();
 		if ($query !== '') {
 			$query = $query . '&';
@@ -67,13 +70,15 @@ class UrlService {
 	}
 
 	/**
+	 *
+	 *
 	 * @param \TYPO3\Flow\Http\Uri $uri
 	 * @param string $argumentName
 	 * @param string $signature Base64 encoded signature of the URI with arguments (excluding the signature argument)
 	 * @param string $ssoClientIdentifier
 	 * @return boolean
 	 */
-	public function verifyLoginUrl($uri, $argumentName, $signature, $ssoClientIdentifier) {
+	public function verifyLoginUri(Uri $uri, $argumentName, $signature, $ssoClientIdentifier) {
 		$uri = clone $uri;
 		$arguments = $uri->getArguments();
 		unset($arguments[$argumentName]);
