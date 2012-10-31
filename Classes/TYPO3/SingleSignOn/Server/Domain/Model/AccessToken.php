@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 class AccessToken {
 
 	/**
-	 * The identifier
+	 * The identifier of the access token
 	 * @ORM\Id
 	 * @Flow\Identity
 	 * @var string
@@ -46,11 +46,10 @@ class AccessToken {
 	protected $ssoClient;
 
 	/**
-	 * Generate an access token with UUID as identifier
+	 * Generate an access token with a random string as identifier
 	 */
 	public function __construct() {
-		// TODO Use more secure generation of identifier
-		$this->identifier = \TYPO3\Flow\Utility\Algorithms::generateUUID();
+		$this->identifier = \TYPO3\Flow\Utility\Algorithms::generateRandomString(24);
 	}
 
 	/**

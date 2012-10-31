@@ -1,0 +1,11 @@
+#
+# Default Settings for TYPO3.SingleSignOn.Server
+#
+
+TYPO3:
+  SingleSignOn:
+    Server:
+      # Server configuration
+      server:
+        # Mandatory key pair uuid (fingerprint) for the SSO server
+        keyPairUuid: ''

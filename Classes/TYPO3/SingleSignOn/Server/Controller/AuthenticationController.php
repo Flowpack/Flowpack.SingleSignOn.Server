@@ -7,6 +7,8 @@ namespace TYPO3\SingleSignOn\Server\Controller;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\SingleSignOn\Server\Exception;
+use TYPO3\SingleSignOn\Server\Exception\ClientNotFoundException;
 
 /**
  * Single sign-on authentication endpoint
@@ -17,9 +19,9 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\UriService
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory
 	 */
-	protected $uriService;
+	protected $ssoServerFactory;
 
 	/**
 	 * @Flow\Inject
@@ -29,15 +31,15 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository
 	 */
-	protected $authenticationManager;
+	protected $ssoClientRepository;
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Session\SessionInterface
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
 	 */
-	protected $session;
+	protected $authenticationManager;
 
 	/**
 	 * Authenticate action
@@ -52,24 +54,24 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 	 * @return void
 	 */
 	public function authenticateAction($ssoClientIdentifier, $callbackUri, $signature) {
-		$uri = $this->request->getHttpRequest()->getUri();
-
-		$isUriValid = $this->uriService->verifyLoginUri($uri, 'signature', $signature, $ssoClientIdentifier);
+		$ssoServer = $this->ssoServerFactory->create();
+		$ssoClient = $this->ssoClientRepository->findByIdentifier($ssoClientIdentifier);
+		if ($ssoClient === NULL) {
+			throw new ClientNotFoundException('Client with identifier "' . $ssoClientIdentifier . '" not found', 1334940432);
+		}
+		$isUriValid = $ssoServer->verifyAuthenticationRequest($ssoClient, $this->request->getHttpRequest(), 'signature', $signature);
 		if (!$isUriValid) {
-			throw new \TYPO3\Flow\Exception('Could not verify URI "' . $uri . '"', 1334937360);
+			throw new Exception('Could not verify authentication request URI "' . $this->request->getHttpRequest()->getUri() . '"', 1334937360);
 		}
 
 			// This should set the intercepted request inside the security context
 			// TODO Prevent loops
 		$this->authenticationManager->authenticate();
 
-			// TODO Move this logic to a domain service
-		$accessToken = new \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken();
+		$accessToken = $ssoServer->createAccessToken($ssoClient);
 		$this->accessTokenRepository->add($accessToken);
-		$accessToken->setExpiryTime(time() + 60);
-		$accessToken->setSessionId($this->session->getId());
 
-		$redirectUri = $this->uriService->buildCallbackRedirectUri($ssoClientIdentifier, $accessToken, $callbackUri);
+		$redirectUri = $ssoServer->buildCallbackRedirectUri($ssoClient, $accessToken, $callbackUri);
 		$this->redirectToUri($redirectUri);
 	}
 

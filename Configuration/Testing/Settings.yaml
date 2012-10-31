@@ -1,13 +1,17 @@
 TYPO3:
   SingleSignOn:
     Server:
-      # From fixtures
-      ssoServerKeyPairUuid: 'bb5abb57faa122cc031e3c904db3d751'
+      server:
+        keyPairUuid: 'bb5abb57faa122cc031e3c904db3d751'
     Client:
-      ssoClientIdentifier: 'client-01'
-      ssoServerEndpointUri: 'http://ssoserver/test/sso/authentication'
-      ssoClientKeyPairUuid: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
-      ssoServerPublicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
+      client:
+        identifier: 'client-01'
+        keyPairUuid: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
+      server:
+        TestServer:
+          publicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
+          endpointUri: 'http://ssoserver/test/sso/authentication'
+
   Flow:
     security:
       cryptography:

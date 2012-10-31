@@ -35,9 +35,14 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	protected $ssoClientRepository;
 
 	/**
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\UriService
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoServer
 	 */
-	protected $serverUriService;
+	protected $serverSsoServer;
+
+	/**
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient
+	 */
+	protected $serverSsoClient;
 
 	/**
 	 * Register fixture key pairs
@@ -53,7 +58,8 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->rsaWalletService->registerKeyPairFromPrivateKeyString($privateKeyString);
 
 		$this->ssoClientRepository = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository');
-		$this->serverUriService = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Service\UriService');
+
+		$this->serverSsoServer = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory')->create();
 	}
 
 	/**
@@ -66,6 +72,9 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$response = new Response();
 
 		$entryPoint = new \TYPO3\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect();
+		$entryPoint->setOptions(array(
+			'server' => 'TestServer'
+		));
 		$entryPoint->startAuthentication($request, $response);
 
 		$redirectUri = new Uri($response->getHeader('Location'));
@@ -91,11 +100,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$account->setAuthenticationProviderName('SingleSignOn');
 		$this->authenticateAccount($account);
 
-			// Add SSO client
-		$client = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
-		$client->setIdentifier('client-01');
-		$client->setPublicKey('bb45dfda9f461c22cfdd6bbb0a252d8e');
-		$this->ssoClientRepository->add($client);
+		$this->setUpServerFixtures();
 
 		$this->persistenceManager->persistAll();
 
@@ -104,6 +109,9 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$response = new Response();
 
 		$entryPoint = new \TYPO3\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect();
+		$entryPoint->setOptions(array(
+			'server' => 'TestServer'
+		));
 		$entryPoint->startAuthentication($request, $response);
 
 		$redirectUri = new Uri($response->getHeader('Location'));
@@ -138,18 +146,15 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function singleSignOnProviderAuthenticatesTokenFromCallbackRequest() {
-		$client = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
-		$client->setIdentifier('client-01');
-		$client->setPublicKey('bb45dfda9f461c22cfdd6bbb0a252d8e');
-		$this->ssoClientRepository->add($client);
+		$this->setUpServerFixtures();
 
 		$this->persistenceManager->persistAll();
 
 		$accessToken = new \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken();
 		$accessToken->setSessionId('random-test-sessionid');
-		$accessToken->setSsoClient($client);
+		$accessToken->setSsoClient($this->serverSsoClient);
 
-		$callbackUri = $this->serverUriService->buildCallbackRedirectUri('client-01', $accessToken, 'http://ssoinstance/test/secured');
+		$callbackUri = $this->serverSsoServer->buildCallbackRedirectUri($this->serverSsoClient, $accessToken, 'http://ssoinstance/test/secured');
 
 		$callbackRequest = Request::create($callbackUri);
 		$callbackActionRequest = new \TYPO3\Flow\Mvc\ActionRequest($callbackRequest);
@@ -159,8 +164,22 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 		$this->assertEquals(\TYPO3\SingleSignOn\Client\Security\SingleSignOnToken::AUTHENTICATION_NEEDED, $singleSignOnToken->getAuthenticationStatus(), 'Authentication status should be AUTHENTICATION_NEEDED');
 
-		$singleSignOnProvider = new \TYPO3\SingleSignOn\Client\Security\SingleSignOnProvider('SingleSignOnProvider');
+		$singleSignOnProvider = new \TYPO3\SingleSignOn\Client\Security\SingleSignOnProvider('SingleSignOnProvider', array(
+			'server' => 'TestServer'
+		));
 		$singleSignOnProvider->authenticate($singleSignOnToken);
+	}
+
+	/**
+	 * Set up server fixtures
+	 *
+	 * Adds a SSO client to the repository.
+	 */
+	protected function setUpServerFixtures() {
+		$this->serverSsoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
+		$this->serverSsoClient->setIdentifier('client-01');
+		$this->serverSsoClient->setPublicKey('bb45dfda9f461c22cfdd6bbb0a252d8e');
+		$this->ssoClientRepository->add($this->serverSsoClient);
 	}
 
 }

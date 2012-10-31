@@ -8,14 +8,15 @@ namespace TYPO3\SingleSignOn\Server\Domain\Model;
 
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
-use \TYPO3\SingleSignOn\Client\Domain\Model\SsoInstanceInterface;
 
 /**
  * SSO client
  *
+ * Used for persistent client configurations on the SSO server.
+ *
  * @Flow\Entity
  */
-class SsoClient implements SsoInstanceInterface {
+class SsoClient {
 
 	/**
 	 * The identifier
@@ -30,13 +31,6 @@ class SsoClient implements SsoInstanceInterface {
 	 * @var string
 	 */
 	protected $publicKey = '';
-
-	/**
-	 * The private key (uuid)
-	 * @var string
-	 */
-	protected $privateKey = '';
-
 
 	/**
 	 * Get the Sso client's identifier
@@ -74,25 +68,6 @@ class SsoClient implements SsoInstanceInterface {
 	 */
 	public function setPublicKey($publicKey) {
 		$this->publicKey = $publicKey;
-	}
-
-	/**
-	 * Get the Sso client's private key
-	 *
-	 * @return string The Sso client's private key
-	 */
-	public function getPrivateKey() {
-		return $this->privateKey;
-	}
-
-	/**
-	 * Sets this Sso client's private key
-	 *
-	 * @param string $privateKey The Sso client's private key
-	 * @return void
-	 */
-	public function setPrivateKey($privateKey) {
-		$this->privateKey = $privateKey;
 	}
 
 }
