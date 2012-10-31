@@ -30,8 +30,8 @@ class ClientCommandController extends \TYPO3\Flow\Cli\CommandController {
 	/**
 	 * Add a client
 	 *
-	 * @param string $identifier This argument is required
-	 * @param string $publicKey The public key uuid (has to be imported using the wallet service first)
+	 * @param string $identifier The client identifier
+	 * @param string $publicKey The public key fingerprint (has to be imported using the RSA wallet service first)
 	 * @return void
 	 */
 	public function addCommand($identifier, $publicKey) {
