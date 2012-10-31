@@ -18,6 +18,8 @@ class UriServiceTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function verifyLoginUriRemovesSignatureAndCsrfTokenFromUriForVerification() {
+		$this->markTestSkipped('Refactor to SsoServer');
+
 		$endpointUri = new Uri('http://ssoserver/sso/authentication?foo=bar&callbackUri=abc&clientIdentifier=client-01&signature=xyz&__csrfToken=123');
 		$clientIdentifier = 'client-01';
 
