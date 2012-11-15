@@ -98,6 +98,8 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$account->setAccountIdentifier('testuser');
 		$account->setRoles(array('User'));
 		$account->setAuthenticationProviderName('SingleSignOn');
+		$this->persistenceManager->add($account);
+
 		$this->authenticateAccount($account);
 
 		$this->setUpServerFixtures();
