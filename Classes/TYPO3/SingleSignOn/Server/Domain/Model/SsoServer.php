@@ -104,10 +104,12 @@ class SsoServer {
 	 * The access token allows the client to get authentication details and transfer the session id.
 	 *
 	 * @param \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient
+	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken
 	 */
-	public function createAccessToken(SsoClient $ssoClient) {
+	public function createAccessToken(SsoClient $ssoClient, \TYPO3\Flow\Security\Account $account) {
 		$accessToken = new \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken();
+		$accessToken->setAccount($account);
 		$accessToken->setExpiryTime(time() + 60);
 		$accessToken->setSessionId($this->session->getId());
 		$accessToken->setSsoClient($ssoClient);

@@ -46,6 +46,12 @@ class AccessToken {
 	protected $ssoClient;
 
 	/**
+	 * @ORM\ManyToOne
+	 * @var \TYPO3\Flow\Security\Account
+	 */
+	protected $account;
+
+	/**
 	 * Generate an access token with a random string as identifier
 	 */
 	public function __construct() {
@@ -121,6 +127,20 @@ class AccessToken {
 	 */
 	public function setSsoClient($ssoClient) {
 		$this->ssoClient = $ssoClient;
+	}
+
+	/**
+	 * @param \TYPO3\Flow\Security\Account $account
+	 */
+	public function setAccount($account) {
+		$this->account = $account;
+	}
+
+	/**
+	 * @return \TYPO3\Flow\Security\Account
+	 */
+	public function getAccount() {
+		return $this->account;
 	}
 
 }

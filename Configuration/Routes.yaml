@@ -1,5 +1,5 @@
 -
-  name: 'SSO authentication with action'
+  name: 'SSO authentication endpoint with action'
   uriPattern: 'authentication(/{@action})'
   defaults:
     '@package':    'TYPO3.SingleSignOn.Server'
@@ -9,9 +9,11 @@
   appendExceedingArguments: TRUE
 
 -
-  name: 'Login with optional action'
-  uriPattern: 'login(/{@action})'
+  name: 'SSO access token redemption'
+  uriPattern: 'redeem/{accessToken}'
   defaults:
     '@package':    'TYPO3.SingleSignOn.Server'
-    '@controller': 'Login'
-    '@action':     'index'
+    '@controller': 'AccessToken'
+    '@action':     'redeem'
+    '@format':     'html'
+  appendExceedingArguments: TRUE

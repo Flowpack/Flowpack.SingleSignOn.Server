@@ -68,7 +68,9 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 			// TODO Prevent loops
 		$this->authenticationManager->authenticate();
 
-		$accessToken = $ssoServer->createAccessToken($ssoClient);
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+
+		$accessToken = $ssoServer->createAccessToken($ssoClient, $account);
 		$this->accessTokenRepository->add($accessToken);
 
 		$redirectUri = $ssoServer->buildCallbackRedirectUri($ssoClient, $accessToken, $callbackUri);
