@@ -10,7 +10,7 @@ TYPO3:
       server:
         TestServer:
           publicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
-          endpointUri: 'http://ssoserver/test/sso/authentication'
+          serviceBaseUri: 'http://ssoserver/test/sso'
 
   Flow:
     security:

@@ -148,6 +148,8 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function singleSignOnProviderAuthenticatesTokenFromCallbackRequest() {
+		$this->markTestIncomplete('TODO Mock redeem access token REST service for test');
+
 		$this->setUpServerFixtures();
 
 		$this->persistenceManager->persistAll();
