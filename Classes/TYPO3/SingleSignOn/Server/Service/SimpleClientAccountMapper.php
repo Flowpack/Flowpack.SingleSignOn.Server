@@ -9,10 +9,10 @@ namespace TYPO3\SingleSignOn\Server\Service;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
- * Interface for a mapper service that maps the globally authenticated account
- * to account data for an instance.
+ * A simple instance account mapper that will map all (safe) information of
+ * the authenticated account and the associated party.
  */
-interface InstanceAccountMapperInterface {
+class SimpleClientAccountMapper implements ClientAccountMapperInterface {
 
 	/**
 	 * Map the given account as account data for an instance
@@ -21,7 +21,15 @@ interface InstanceAccountMapperInterface {
 	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return array
 	 */
-	public function getAccountData(\TYPO3\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient, \TYPO3\Flow\Security\Account $account);
+	public function getAccountData(\TYPO3\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient, \TYPO3\Flow\Security\Account $account) {
+		return array(
+			'accountIdentifier' => $account->getAccountIdentifier(),
+			'roles' => array_map(function($role) { return $role->getIdentifier(); }, $account->getRoles()),
+			'party' => array(
+				// TODO Map public party properties
+			)
+		);
+	}
 
 }
 ?>

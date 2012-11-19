@@ -33,7 +33,7 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Service\InstanceAccountMapperInterface
+	 * @var \TYPO3\SingleSignOn\Server\Service\ClientAccountMapperInterface
 	 */
 	protected $instanceAccountMapper;
 

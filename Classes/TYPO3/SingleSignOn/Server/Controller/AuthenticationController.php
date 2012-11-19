@@ -42,6 +42,12 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 	protected $authenticationManager;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Service\AccountManager
+	 */
+	protected $accountManager;
+
+	/**
 	 * Authenticate action
 	 *
 	 * - Verifies the given arguments
@@ -68,7 +74,7 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 			// TODO Prevent loops
 		$this->authenticationManager->authenticate();
 
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$account = $this->accountManager->getClientAccount();
 
 		$accessToken = $ssoServer->createAccessToken($ssoClient, $account);
 		$this->accessTokenRepository->add($accessToken);
