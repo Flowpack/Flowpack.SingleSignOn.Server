@@ -15,47 +15,51 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function jsonViewSerializesAccountRoles() {
-		$account = new \TYPO3\Flow\Security\Account();
-		$account->setAccountIdentifier('TestAccount');
-		$account->addRole(new \TYPO3\Flow\Security\Policy\Role('TestRole'));
-		$person = new \TYPO3\Party\Domain\Model\Person();
-		$person->setName(new \TYPO3\Party\Domain\Model\PersonName('', 'John', '', 'Doe'));
-		$account->setParty($person);
-
-		$view = $this->getAccessibleMock('TYPO3\Flow\Mvc\View\JsonView', array('dummy'));
-		$view->setConfiguration(array(
-			'value' => array(
-				'_exclude' => array('credentialsSource', 'authenticationProviderName', 'expirationDate'),
-				'_descend' => array(
-					'roles' => array('_only' => 'identifier'),
+		$view->assign('value',
+			array(
+				'account' => array(
+					'accountIdentifier' => 'TestAccount',
 					'party' => array(
-						'_descend' => array(
-							'name' => array()
-						)
+						'name' => array(
+							'alias' => '',
+							'firstName' => 'John',
+							'fullName' => 'John Doe',
+							'lastName' => 'Doe',
+							'middleName' => '',
+							'otherName' => '',
+							'title' => ''
+						),
+						'primaryElectronicAddress' => ''
+					),
+					'roles' => array(
+						array('identifier' => 'TestRole')
 					)
-				)
+				),
+				'sessionId' => 'abcdefg'
 			)
-		));
-		$view->assign('value', $account);
+		);
 
 		$output = $view->_call('renderArray');
 		$this->assertEquals(array(
-			'accountIdentifier' => 'TestAccount',
-			'party' => array(
-				'name' => array(
-					'alias' => '',
-					'firstName' => 'John',
-					'fullName' => 'John Doe',
-					'lastName' => 'Doe',
-					'middleName' => '',
-					'otherName' => '',
-					'title' => ''
+			'account' => array(
+				'accountIdentifier' => 'TestAccount',
+				'party' => array(
+					'name' => array(
+						'alias' => '',
+						'firstName' => 'John',
+						'fullName' => 'John Doe',
+						'lastName' => 'Doe',
+						'middleName' => '',
+						'otherName' => '',
+						'title' => ''
+					),
+					'primaryElectronicAddress' => ''
 				),
-				'primaryElectronicAddress' => ''
+				'roles' => array(
+					array('identifier' => 'TestRole')
+				)
 			),
-			'roles' => array(
-				array('identifier' => 'TestRole')
-			)
+			'sessionId' => 'abcdefg'
 		), $output);
 	}
 }

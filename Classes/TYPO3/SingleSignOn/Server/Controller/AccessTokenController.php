@@ -12,7 +12,7 @@ use TYPO3\SingleSignOn\Server\Exception;
 /**
  * Access token management controller
  *
- * Acts as server-to-server communication to redeem access tokens
+ * Acts as server-to-server REST service to redeem access tokens
  * into account data and the global session id.
  *
  * @Flow\Scope("singleton")
@@ -32,6 +32,12 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	protected $ssoClientRepository;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Service\InstanceAccountMapperInterface
+	 */
+	protected $instanceAccountMapper;
+
+	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -47,22 +53,6 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	 * @param string $accessToken
 	 */
 	public function redeemAction($accessToken) {
-		$this->view->setConfiguration(array(
-			'value' => array(
-				'account' => array(
-					'_exclude' => array('__isInitialized__', 'credentialsSource', 'authenticationProviderName', 'expirationDate'),
-					'_descend' => array(
-						'roles' => array('_only' => 'identifier'),
-						'party' => array(
-							'_descend' => array(
-								'name' => array()
-							)
-						)
-					)
-				)
-			)
-		));
-
 		$accessTokenObject = $this->accessTokenRepository->findByIdentifier($accessToken);
 		if (!$accessTokenObject instanceof \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken) {
 			$this->response->setStatus(404);
@@ -76,10 +66,18 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		// TODO Is it better to get the account by session id?
 		$account = $accessTokenObject->getAccount();
 
+		$accountData = $this->instanceAccountMapper->getAccountData($accessTokenObject->getSsoClient(), $account);
+
+		// TODO Check that session id is active (when FlowSession supports that)
+
 		$this->view->assign('value', array(
-			'account' => $account,
+			'account' => $accountData,
 			'sessionId' => $sessionId
 		));
+
+		$sessionBaseUri = $this->uriBuilder->uriFor('show', array('sessionId' => $sessionId), 'Session');
+		$this->response->setHeader('Location', $sessionBaseUri);
+		$this->response->setStatus(201);
 	}
 
 }

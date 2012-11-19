@@ -10,7 +10,7 @@
 
 -
   name: 'SSO access token redemption'
-  uriPattern: 'redeem/{accessToken}'
+  uriPattern: 'token/{accessToken}/redeem'
   defaults:
     '@package':    'TYPO3.SingleSignOn.Server'
     '@controller': 'AccessToken'
