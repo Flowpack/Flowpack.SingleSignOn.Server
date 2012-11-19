@@ -15,6 +15,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function jsonViewSerializesAccountRoles() {
+		$view = $this->getAccessibleMock('TYPO3\Flow\Mvc\View\JsonView', array('dummy'));
 		$view->assign('value',
 			array(
 				'account' => array(
