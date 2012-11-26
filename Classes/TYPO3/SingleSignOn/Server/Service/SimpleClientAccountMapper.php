@@ -9,7 +9,7 @@ namespace TYPO3\SingleSignOn\Server\Service;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
- * A simple instance account mapper that will map all (safe) information of
+ * A simple instance account mapper that will map all (safe) properties of
  * the authenticated account and the associated party.
  */
 class SimpleClientAccountMapper implements ClientAccountMapperInterface {

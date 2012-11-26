@@ -9,13 +9,20 @@ namespace TYPO3\SingleSignOn\Server\Controller;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\SingleSignOn\Server\Exception;
 use TYPO3\SingleSignOn\Server\Exception\ClientNotFoundException;
+use TYPO3\SingleSignOn\Server\Exception\SignatureVerificationFailedException;
 
 /**
- * Single sign-on authentication endpoint
+ * Public single sign-on authentication endpoint
+ *
+ * Acts as the authentication endpoint to transfer a global session to a client
+ * (with an access token through a server-side channel).
+ *
+ * This controller will start authenticate the user locally if no local session
+ * exists on the server.
  *
  * @Flow\Scope("singleton")
  */
-class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionController {
+class EndpointController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * @Flow\Inject
@@ -57,17 +64,16 @@ class AuthenticationController extends \TYPO3\Flow\Mvc\Controller\ActionControll
 	 * @param string $ssoClientIdentifier
 	 * @param string $callbackUri
 	 * @param string $signature
-	 * @return void
 	 */
 	public function authenticateAction($ssoClientIdentifier, $callbackUri, $signature) {
-		$ssoServer = $this->ssoServerFactory->create();
 		$ssoClient = $this->ssoClientRepository->findByIdentifier($ssoClientIdentifier);
 		if ($ssoClient === NULL) {
 			throw new ClientNotFoundException('Client with identifier "' . $ssoClientIdentifier . '" not found', 1334940432);
 		}
+		$ssoServer = $this->ssoServerFactory->create();
 		$isUriValid = $ssoServer->verifyAuthenticationRequest($ssoClient, $this->request->getHttpRequest(), 'signature', $signature);
 		if (!$isUriValid) {
-			throw new Exception('Could not verify authentication request URI "' . $this->request->getHttpRequest()->getUri() . '"', 1334937360);
+			throw new SignatureVerificationFailedException('Could not verify authentication request URI "' . $this->request->getHttpRequest()->getUri() . '"', 1334937360);
 		}
 
 			// This should set the intercepted request inside the security context

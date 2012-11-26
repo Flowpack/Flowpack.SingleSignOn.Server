@@ -84,7 +84,7 @@ class SsoServer {
 	 * @param string $callbackUri
 	 * @return \TYPO3\Flow\Http\Uri
 	 */
-	public function buildCallbackRedirectUri(SsoClient $ssoClient, $accessToken, $callbackUri) {
+	public function buildCallbackRedirectUri(SsoClient $ssoClient, AccessToken $accessToken, $callbackUri) {
 		$accessTokenCipher = $this->rsaWalletService->encryptWithPublicKey($accessToken->getIdentifier(), $ssoClient->getPublicKey());
 		$signature = $this->rsaWalletService->sign($accessTokenCipher, $this->keyPairUuid);
 

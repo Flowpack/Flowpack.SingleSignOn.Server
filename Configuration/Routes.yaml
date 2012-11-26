@@ -1,9 +1,9 @@
 -
-  name: 'SSO authentication endpoint with action'
-  uriPattern: 'authentication(/{@action})'
+  name: 'SSO authentication endpoint'
+  uriPattern: 'authentication'
   defaults:
     '@package':    'TYPO3.SingleSignOn.Server'
-    '@controller': 'Authentication'
+    '@controller': 'Endpoint'
     '@action':     'authenticate'
     '@format':     'html'
   appendExceedingArguments: TRUE

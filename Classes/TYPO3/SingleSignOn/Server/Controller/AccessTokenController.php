@@ -27,15 +27,9 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository
-	 */
-	protected $ssoClientRepository;
-
-	/**
-	 * @Flow\Inject
 	 * @var \TYPO3\SingleSignOn\Server\Service\ClientAccountMapperInterface
 	 */
-	protected $instanceAccountMapper;
+	protected $clientAccountMapper;
 
 	/**
 	 * @var string
@@ -49,6 +43,7 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 
 	/**
 	 * Redeem an access token and return global account data for the authenticated account
+	 * and a global session id.
 	 *
 	 * @param string $accessToken
 	 */
@@ -56,28 +51,42 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		$accessTokenObject = $this->accessTokenRepository->findByIdentifier($accessToken);
 		if (!$accessTokenObject instanceof \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken) {
 			$this->response->setStatus(404);
-			return 'Invalid access token';
+			$this->view->assign('message', 'Invalid access token');
+			return;
 		}
 
 		$sessionId = $accessTokenObject->getSessionId();
 		$this->accessTokenRepository->remove($accessTokenObject);
 
-		// TODO Allow more flexible way of getting the account data (map authenticated to global account)
-		// TODO Is it better to get the account by session id?
+		if (!$this->sessionIsActive($sessionId)) {
+			$this->response->setStatus(403);
+			$this->view->assign('message', 'Session expired');
+			return;
+		}
+
+		// TODO Get the account from the global session
 		$account = $accessTokenObject->getAccount();
+		$accountData = $this->clientAccountMapper->getAccountData($accessTokenObject->getSsoClient(), $account);
 
-		$accountData = $this->instanceAccountMapper->getAccountData($accessTokenObject->getSsoClient(), $account);
-
-		// TODO Check that session id is active (when FlowSession supports that)
+		$sessionBaseUri = $this->uriBuilder->uriFor('show', array('sessionId' => $sessionId), 'Session');
+		$this->response->setHeader('Location', $sessionBaseUri);
+		$this->response->setStatus(201);
 
 		$this->view->assign('value', array(
 			'account' => $accountData,
 			'sessionId' => $sessionId
 		));
+	}
 
-		$sessionBaseUri = $this->uriBuilder->uriFor('show', array('sessionId' => $sessionId), 'Session');
-		$this->response->setHeader('Location', $sessionBaseUri);
-		$this->response->setStatus(201);
+	/**
+	 * Test if the given session is active and not expired
+	 *
+	 * @param string $sessionId
+	 * @return boolean
+	 */
+	protected function sessionIsActive($sessionId) {
+		// TODO Use session manager
+		return TRUE;
 	}
 
 }

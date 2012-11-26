@@ -8,14 +8,14 @@ namespace TYPO3\SingleSignOn\Server\Exception;
 
 
 /**
- * A client not found exception
+ * A signature verification failed exception
  */
-class ClientNotFoundException extends \TYPO3\SingleSignOn\Server\Exception {
+class SignatureVerificationFailedException extends \TYPO3\SingleSignOn\Server\Exception {
 
 	/**
 	 * @var integer
 	 */
-	protected $statusCode = 404;
+	protected $statusCode = 403;
 
 }
 ?>
