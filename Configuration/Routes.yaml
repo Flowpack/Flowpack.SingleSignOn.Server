@@ -17,3 +17,13 @@
     '@action':     'redeem'
     '@format':     'html'
   appendExceedingArguments: TRUE
+
+-
+  name: 'SSO session touch'
+  uriPattern: 'session/{sessionId}/touch'
+  defaults:
+    '@package':    'TYPO3.SingleSignOn.Server'
+    '@controller': 'Session'
+    '@action':     'touch'
+    '@format':     'html'
+  appendExceedingArguments: TRUE
