@@ -16,11 +16,34 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function redeemActionWithInvalidMethodRespondsWith405() {
+		$controller = new \TYPO3\SingleSignOn\Server\Controller\AccessTokenController();
+
+		$response = new \TYPO3\Flow\Http\Response();
+		$this->inject($controller, 'response', $response);
+		$mockRequest = m::mock('TYPO3\Flow\Mvc\ActionRequest', array(
+			'getHttpRequest->getMethod' => 'GET'
+		));
+		$this->inject($controller, 'request', $mockRequest);
+		$this->inject($controller, 'view', m::mock('TYPO3\Flow\Mvc\View\ViewInterface')->shouldIgnoreMissing());
+
+		$controller->redeemAction('invalid-accesstoken');
+
+		$this->assertEquals(405, $response->getStatusCode());
+	}
+
+	/**
+	 * @test
+	 */
 	public function redeemActionWithInvalidAccessTokenRespondsWith404() {
 		$controller = new \TYPO3\SingleSignOn\Server\Controller\AccessTokenController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
+		$mockRequest = m::mock('TYPO3\Flow\Mvc\ActionRequest', array(
+			'getHttpRequest->getMethod' => 'POST'
+		));
+		$this->inject($controller, 'request', $mockRequest);
 		$mockAccessTokenRepository = m::mock('TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
 			'findByIdentifier' => NULL
 		));
@@ -40,6 +63,10 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
+		$mockRequest = m::mock('TYPO3\Flow\Mvc\ActionRequest', array(
+			'getHttpRequest->getMethod' => 'POST'
+		));
+		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
 		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
 		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
@@ -71,6 +98,10 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
+		$mockRequest = m::mock('TYPO3\Flow\Mvc\ActionRequest', array(
+			'getHttpRequest->getMethod' => 'POST'
+		));
+		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
 		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
 		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(

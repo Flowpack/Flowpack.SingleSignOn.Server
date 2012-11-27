@@ -30,13 +30,13 @@ class AccessToken {
 	 * The expiry time
 	 * @var integer
 	 */
-	protected $expiryTime;
+	protected $expiryTime = 0;
 
 	/**
 	 * The session id
 	 * @var string
 	 */
-	protected $sessionId;
+	protected $sessionId = '';
 
 	/**
 	 * The SSO client that initiated the request

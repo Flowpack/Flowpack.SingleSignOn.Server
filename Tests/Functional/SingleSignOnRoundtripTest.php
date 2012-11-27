@@ -123,7 +123,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$route->setUriPattern('test/sso/authentication(/{@action})');
 		$route->setDefaults(array(
 			'@package' => 'TYPO3.SingleSignOn.Server',
-			'@controller' => 'Authentication',
+			'@controller' => 'Endpoint',
 			'@action' => 'authenticate',
 			'@format' =>'html'
 		));

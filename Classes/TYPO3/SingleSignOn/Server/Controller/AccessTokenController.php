@@ -45,9 +45,17 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	 * Redeem an access token and return global account data for the authenticated account
 	 * and a global session id.
 	 *
+	 * POST token/{accessToken}/redeem
+	 *
 	 * @param string $accessToken
 	 */
 	public function redeemAction($accessToken) {
+		if ($this->request->getHttpRequest()->getMethod() !== 'POST') {
+			$this->response->setStatus(405);
+			$this->response->setHeader('Allow', 'POST');
+			return;
+		}
+
 		$accessTokenObject = $this->accessTokenRepository->findByIdentifier($accessToken);
 		if (!$accessTokenObject instanceof \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken) {
 			$this->response->setStatus(404);
@@ -68,7 +76,7 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		$account = $accessTokenObject->getAccount();
 		$accountData = $this->clientAccountMapper->getAccountData($accessTokenObject->getSsoClient(), $account);
 
-		$sessionBaseUri = $this->uriBuilder->uriFor('show', array('sessionId' => $sessionId), 'Session');
+		$sessionBaseUri = $this->uriBuilder->uriFor('show', array('sessionId' => $sessionId), 'Session', 'TYPO3.SingleSignOn.Server', '');
 		$this->response->setHeader('Location', $sessionBaseUri);
 		$this->response->setStatus(201);
 
