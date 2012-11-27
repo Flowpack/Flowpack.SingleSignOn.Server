@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\SingleSignOn\Server\Tests\Unit\Domain\Service;
+namespace TYPO3\SingleSignOn\Server\Tests\Unit\Domain\Model;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
@@ -95,7 +95,7 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	}
 
 	/**
-	 *
+	 * Check for Mockery expectations
 	 */
 	public function tearDown() {
 		m::close();

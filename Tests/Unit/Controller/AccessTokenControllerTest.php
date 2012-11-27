@@ -140,5 +140,12 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->markTestIncomplete('Implement if session manager is used');
 	}
 
+	/**
+	 * Check for Mockery expectations
+	 */
+	public function tearDown() {
+		m::close();
+	}
+
 }
 ?>

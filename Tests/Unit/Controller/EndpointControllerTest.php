@@ -106,5 +106,12 @@ class EndpointControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$controller->authenticateAction('invalid-client', 'http://test/', 'abcdefg');
 	}
 
+	/**
+	 * Check for Mockery expectations
+	 */
+	public function tearDown() {
+		m::close();
+	}
+
 }
 ?>
