@@ -66,6 +66,9 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		$sessionId = $accessTokenObject->getSessionId();
 		$this->accessTokenRepository->remove($accessTokenObject);
 
+		// TODO Register SSO client in global session for notifications
+		$ssoClient = $accessTokenObject->getSsoClient();
+
 		if (!$this->sessionIsActive($sessionId)) {
 			$this->response->setStatus(403);
 			$this->view->assign('message', 'Session expired');
