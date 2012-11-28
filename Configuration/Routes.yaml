@@ -15,8 +15,7 @@
     '@package':    'TYPO3.SingleSignOn.Server'
     '@controller': 'AccessToken'
     '@action':     'redeem'
-    '@format':     'html'
-  appendExceedingArguments: TRUE
+    '@format':     'json'
 
 -
   name: 'SSO session touch'
@@ -25,5 +24,14 @@
     '@package':    'TYPO3.SingleSignOn.Server'
     '@controller': 'Session'
     '@action':     'touch'
-    '@format':     'html'
-  appendExceedingArguments: TRUE
+    '@format':     'json'
+
+-
+  name: 'SSO session destroy'
+  uriPattern: 'session/{sessionId}/destroy'
+  defaults:
+    '@package':    'TYPO3.SingleSignOn.Server'
+    '@controller': 'Session'
+    '@action':     'destroy'
+    '@format':     'json'
+

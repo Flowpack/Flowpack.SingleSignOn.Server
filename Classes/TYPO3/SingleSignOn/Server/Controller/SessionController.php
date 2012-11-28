@@ -19,6 +19,12 @@ use TYPO3\SingleSignOn\Server\Exception;
 class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Session\SessionManagerInterface
+	 */
+	protected $sessionManager;
+
+	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -56,8 +62,22 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $sessionId The session id
 	 */
 	public function destroyAction($sessionId) {
-		// TODO Remove the session using the SessionManager
-		// TODO Notify clients that are registered in the session
+		if ($this->request->getHttpRequest()->getMethod() !== 'DELETE') {
+			$this->response->setStatus(405);
+			$this->response->setHeader('Allow', 'DELETE');
+			return;
+		}
+
+		$session = $this->sessionManager->getSession($sessionId);
+		if ($session !== NULL) {
+			$session->destroy('Destroyed by session REST service');
+			// TODO Notify clients that are registered in the session
+			$this->view->assign('value', array(
+				'success' => TRUE
+			));
+		} else {
+			$this->response->setStatus(404);
+		}
 	}
 
 }
