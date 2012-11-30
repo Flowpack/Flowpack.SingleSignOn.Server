@@ -2,7 +2,7 @@
 namespace TYPO3\SingleSignOn\Server\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Client".*
+ * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
