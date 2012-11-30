@@ -59,7 +59,7 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		$accessTokenObject = $this->accessTokenRepository->findByIdentifier($accessToken);
 		if (!$accessTokenObject instanceof \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken) {
 			$this->response->setStatus(404);
-			$this->view->assign('message', 'Invalid access token');
+			$this->view->assign('value', array('message' => 'Invalid access token'));
 			return;
 		}
 
@@ -71,7 +71,7 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 
 		if (!$this->sessionIsActive($sessionId)) {
 			$this->response->setStatus(403);
-			$this->view->assign('message', 'Session expired');
+			$this->view->assign('value', array('message' => 'Session expired'));
 			return;
 		}
 
