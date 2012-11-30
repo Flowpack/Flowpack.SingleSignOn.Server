@@ -9,3 +9,20 @@ TYPO3:
       server:
         # Mandatory key pair uuid (fingerprint) for the SSO server
         keyPairUuid: ''
+
+  Flow:
+    security:
+      firewall:
+        filters:
+          -
+            patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern'
+            patternValue:
+              patterns:
+                -
+                  patternType: ControllerObjectName
+                  patternValue: 'TYPO3\SingleSignOn\Server\Controller\(AccessToken|Session)Controller'
+                -
+                  patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern'
+                  patternValue:
+                    resolverType: 'TYPO3\SingleSignOn\Server\Security\RequestPattern\SsoClientPublicKeyResolver'
+            interceptor: AccessDeny
