@@ -32,6 +32,12 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	protected $clientAccountMapper;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Session\SessionManagerInterface
+	 */
+	protected $sessionManager;
+
+	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -45,11 +51,12 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	 * Redeem an access token and return global account data for the authenticated account
 	 * and a global session id.
 	 *
-	 * POST token/{accessToken}/redeem
+	 * POST token/{accessToken}/redeem?clientSessionId=abc
 	 *
 	 * @param string $accessToken
+	 * @param string $clientSessionId
 	 */
-	public function redeemAction($accessToken) {
+	public function redeemAction($accessToken, $clientSessionId = NULL) {
 		if ($this->request->getHttpRequest()->getMethod() !== 'POST') {
 			$this->response->setStatus(405);
 			$this->response->setHeader('Allow', 'POST');
@@ -64,18 +71,29 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		}
 
 		$sessionId = $accessTokenObject->getSessionId();
-		$this->accessTokenRepository->remove($accessTokenObject);
-
-		// TODO Register SSO client in global session for notifications
-		$ssoClient = $accessTokenObject->getSsoClient();
-
-		if (!$this->sessionIsActive($sessionId)) {
+		$session = $this->sessionManager->getSession($sessionId);
+		if (!$this->sessionIsActive($session)) {
 			$this->response->setStatus(403);
 			$this->view->assign('value', array('message' => 'Session expired'));
 			return;
 		}
 
+		$this->accessTokenRepository->remove($accessTokenObject);
+
+		// TODO Move the actual logic of redemption and client registration to a service
+
+		if ($clientSessionId !== NULL) {
+			$ssoClient = $accessTokenObject->getSsoClient();
+			$registeredClients = $session->getData('TYPO3_SingleSignOn_Clients');
+			if (!is_array($registeredClients)) {
+				$registeredClients = array();
+			}
+			$registeredClients[$ssoClient->getBaseUri()] = $clientSessionId;
+			$session->putData('TYPO3_SingleSignOn_Clients', $registeredClients);
+		}
+
 		// TODO Get the account from the global session
+		// TODO What to do with multiple accounts?
 		$account = $accessTokenObject->getAccount();
 		$accountData = $this->clientAccountMapper->getAccountData($accessTokenObject->getSsoClient(), $account);
 
@@ -92,12 +110,11 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	/**
 	 * Test if the given session is active and not expired
 	 *
-	 * @param string $sessionId
+	 * @param \TYPO3\Flow\Session\SessionInterface $session
 	 * @return boolean
 	 */
-	protected function sessionIsActive($sessionId) {
-		// TODO Use session manager
-		return TRUE;
+	protected function sessionIsActive($session) {
+		return $session !== NULL && $session->isStarted();
 	}
 
 }

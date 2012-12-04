@@ -16,6 +16,7 @@
     '@controller': 'AccessToken'
     '@action':     'redeem'
     '@format':     'json'
+  appendExceedingArguments: TRUE
 
 -
   name: 'SSO session touch'
@@ -34,4 +35,3 @@
     '@controller': 'Session'
     '@action':     'destroy'
     '@format':     'json'
-
