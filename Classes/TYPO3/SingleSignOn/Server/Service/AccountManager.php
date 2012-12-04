@@ -24,6 +24,24 @@ class AccountManager {
 	protected $authenticationManager;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Session\SessionInterface
+	 */
+	protected $session;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory
+	 */
+	protected $ssoServerFactory;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository
+	 */
+	protected $ssoClientRepository;
+
+	/**
 	 * Get the currently active account for any SSO client (for the current session)
 	 *
 	 * @return \TYPO3\Flow\Security\Account
@@ -53,6 +71,28 @@ class AccountManager {
 	public function impersonateAccount(\TYPO3\Flow\Security\Account $account) {
 		// TODO Implement
 		// TODO Emit signal (for client notification)
+	}
+
+	/**
+	 * Called on logout of the active account (through the server)
+	 *
+	 * @return void
+	 */
+	public function onLoggedOut() {
+		$registeredClients = $this->session->getData('TYPO3_SingleSignOn_Clients');
+		if (!is_array($registeredClients)) {
+			$registeredClients = array();
+		}
+
+		$ssoServer = $this->ssoServerFactory->create();
+		foreach ($registeredClients as $clientIdentifier => $clientSessionId) {
+			$ssoClient = $this->ssoClientRepository->findByIdentifier($clientIdentifier);
+			if ($ssoClient instanceof \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient) {
+				$ssoClient->destroySession($ssoServer, $clientSessionId);
+			} else {
+				// TODO Log or ignore missing client
+			}
+		}
 	}
 
 }
