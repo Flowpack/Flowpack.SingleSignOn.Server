@@ -30,11 +30,11 @@ class ClientCommandController extends \TYPO3\Flow\Cli\CommandController {
 	/**
 	 * Add a client
 	 *
-	 * @param string $identifier The client identifier
+	 * @param string $baseUri The client base URI as the client identifier
 	 * @param string $publicKey The public key fingerprint (has to be imported using the RSA wallet service first)
 	 * @return void
 	 */
-	public function addCommand($identifier, $publicKey) {
+	public function addCommand($baseUri, $publicKey) {
 		try {
 			$this->rsaWalletService->getPublicKey($publicKey);
 		} catch(\TYPO3\Flow\Security\Exception\InvalidKeyPairIdException $exception) {
@@ -42,7 +42,7 @@ class ClientCommandController extends \TYPO3\Flow\Cli\CommandController {
 		}
 
 		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
-		$ssoClient->setIdentifier($identifier);
+		$ssoClient->setBaseUri($baseUri);
 		$ssoClient->setPublicKey($publicKey);
 		$this->ssoClientRepository->add($ssoClient);
 	}

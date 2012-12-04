@@ -183,7 +183,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 */
 	protected function setUpServerFixtures() {
 		$this->serverSsoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
-		$this->serverSsoClient->setIdentifier('client-01');
+		$this->serverSsoClient->setBaseUri('client-01');
 		$this->serverSsoClient->setPublicKey('bb45dfda9f461c22cfdd6bbb0a252d8e');
 		$this->ssoClientRepository->add($this->serverSsoClient);
 	}

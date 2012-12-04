@@ -40,14 +40,16 @@ class AccessToken {
 
 	/**
 	 * The SSO client that initiated the request
-	 * @ORM\ManyToOne
 	 * @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient
+	 * @ORM\ManyToOne
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	protected $ssoClient;
 
 	/**
-	 * @ORM\ManyToOne
 	 * @var \TYPO3\Flow\Security\Account
+	 * @ORM\ManyToOne
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	protected $account;
 

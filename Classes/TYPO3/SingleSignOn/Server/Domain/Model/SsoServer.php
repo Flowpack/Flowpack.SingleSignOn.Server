@@ -35,20 +35,6 @@ class SsoServer {
 	protected $session;
 
 	/**
-	 * @param string $keyPairUuid
-	 */
-	public function setKeyPairUuid($keyPairUuid) {
-		$this->keyPairUuid = $keyPairUuid;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getKeyPairUuid() {
-		return $this->keyPairUuid;
-	}
-
-	/**
 	 * Verifies the authenticity of an request to the authentication endpoint
 	 *
 	 * Verifies the signature with the public key from the given SSO client excluding
@@ -114,6 +100,20 @@ class SsoServer {
 		$accessToken->setSessionId($this->session->getId());
 		$accessToken->setSsoClient($ssoClient);
 		return $accessToken;
+	}
+
+	/**
+	 * @param string $keyPairUuid
+	 */
+	public function setKeyPairUuid($keyPairUuid) {
+		$this->keyPairUuid = $keyPairUuid;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getKeyPairUuid() {
+		return $this->keyPairUuid;
 	}
 
 }

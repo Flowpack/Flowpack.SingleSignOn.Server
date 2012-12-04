@@ -15,5 +15,19 @@ use TYPO3\Flow\Annotations as FLOW3;
  */
 class SsoClientRepository extends \TYPO3\Flow\Persistence\Repository {
 
+	/**
+	 * Find an SsoClient by identifier (baseUri)
+	 *
+	 * This method overrides the original method to normalize the
+	 * given baseUri (e.g. "http://ssoclient" is normalized to "http://ssoclient/").
+	 *
+	 * @param string $identifier
+	 * @return \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient
+	 */
+	public function findByIdentifier($identifier) {
+		$identifier = rtrim($identifier, '/') . '/';
+		return parent::findByIdentifier($identifier);
+	}
+
 }
 ?>
