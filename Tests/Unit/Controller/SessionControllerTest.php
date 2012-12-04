@@ -28,8 +28,13 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'view', m::mock('TYPO3\Flow\Mvc\View\ViewInterface')->shouldIgnoreMissing());
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
+		$mockSsoServer = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoServer');
+		$mockSsoServerFactory = m::mock('TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory', array(
+			'create' => $mockSsoServer
+		));
+		$this->inject($controller, 'ssoServerFactory', $mockSsoServerFactory);
 
-		$mockSession = m::mock('TYPO3\Flow\Session\Session');
+		$mockSession = m::mock('TYPO3\Flow\Session\Session')->shouldIgnoreMissing();
 		$mockSessionManager->shouldReceive('getSession')->with('valid-session-id')->andReturn($mockSession);
 
 		$mockSession->shouldReceive('destroy')->once();
@@ -52,6 +57,11 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'view', m::mock('TYPO3\Flow\Mvc\View\ViewInterface')->shouldIgnoreMissing());
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
+		$mockSsoServer = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoServer');
+		$mockSsoServerFactory = m::mock('TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory', array(
+			'create' => $mockSsoServer
+		));
+		$this->inject($controller, 'ssoServerFactory', $mockSsoServerFactory);
 
 		$mockSession = m::mock('TYPO3\Flow\Session\Session')->shouldIgnoreMissing();
 		$mockSessionManager->shouldReceive('getSession')->with('valid-session-id')->andReturn($mockSession);

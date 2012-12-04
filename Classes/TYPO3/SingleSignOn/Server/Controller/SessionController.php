@@ -25,6 +25,18 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $sessionManager;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory
+	 */
+	protected $ssoServerFactory;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository
+	 */
+	protected $ssoClientRepository;
+
+	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -57,7 +69,7 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
-	 * DELETE /sso/session/xyz-123
+	 * DELETE /sso/session/xyz-123/destroy
 	 *
 	 * @param string $sessionId The session id
 	 */
@@ -68,10 +80,22 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			return;
 		}
 
+		// TODO Move the actual logic of destroying and notification to a service
 		$session = $this->sessionManager->getSession($sessionId);
 		if ($session !== NULL) {
+			$registeredClients = $session->getData('TYPO3_SingleSignOn_Clients');
+			if (!is_array($registeredClients)) {
+				$registeredClients = array();
+			}
+
 			$session->destroy('Destroyed by session REST service');
-			// TODO Notify clients that are registered in the session
+
+			$ssoServer = $this->ssoServerFactory->create();
+			foreach ($registeredClients as $clientIdentifier => $clientSessionId) {
+				$ssoClient = $this->ssoClientRepository->findByIdentifier($clientIdentifier);
+				$ssoClient->destroySession($ssoServer, $clientSessionId);
+			}
+
 			$this->view->assign('value', array(
 				'success' => TRUE
 			));
