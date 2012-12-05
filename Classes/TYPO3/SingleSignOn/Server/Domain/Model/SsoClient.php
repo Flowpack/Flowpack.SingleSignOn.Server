@@ -67,6 +67,7 @@ class SsoClient {
 	public function destroySession(SsoServer $ssoServer, $sessionId) {
 		$serviceUri = rtrim($this->baseUri, '/') . '/' . trim($this->serviceBasePath, '/') . '/session/' . urlencode($sessionId) . '/destroy';
 		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'DELETE');
+		$request->setContent('');
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoServer->getKeyPairUuid(), $ssoServer->getKeyPairUuid());
 
