@@ -55,6 +55,11 @@ class SsoClient {
 	protected $requestSigner;
 
 	/**
+	 * Destroy a client session with the given session id
+	 *
+	 * The client expects a local session id and not a global session id
+	 * from the SSO server.
+	 *
 	 * @param \TYPO3\SingleSignOn\Server\Domain\Model\SsoServer $ssoServer
 	 * @param string $sessionId
 	 * @return void
