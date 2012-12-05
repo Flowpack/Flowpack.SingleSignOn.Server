@@ -52,10 +52,8 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * POST /sso/session/xyz-123/touch
 	 *
 	 * @param string $sessionId The session id
-	 * @param string $clientIdentifier Optional client base URI to notify the client on not found session
-	 * @param string $clientSessionId Optional client session id for notification if session was not found (or expired)
 	 */
-	public function touchAction($sessionId, $clientIdentifier = NULL, $clientSessionId = NULL) {
+	public function touchAction($sessionId) {
 		if ($this->request->getHttpRequest()->getMethod() !== 'POST') {
 			$this->response->setStatus(405);
 			$this->response->setHeader('Allow', 'POST');
@@ -69,12 +67,6 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->view->assign('value', array('success' => TRUE));
 		} else {
 			$this->response->setStatus(404);
-
-			if ($clientIdentifier !== NULL && $clientSessionId !== NULL) {
-				$ssoServer = $this->ssoServerFactory->create();
-				$ssoClient = $this->ssoClientRepository->findByIdentifier($clientIdentifier);
-				$ssoClient->destroySession($ssoServer, $clientSessionId);
-			}
 
 			$this->view->assign('value', array('error' => 'SessionNotFound'));
 		}
