@@ -83,7 +83,7 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 		$arguments = $redirectUri->getArguments();
 		$this->assertEquals('http://ssoinstance/secured', $arguments['callbackUri']);
-		$this->assertEquals('http://ssoclient/', $arguments['ssoClientIdentifier']);
+		$this->assertEquals('http://ssoclient/sso/', $arguments['ssoClientIdentifier']);
 		$this->assertNotEquals('', $arguments['signature']);
 	}
 
