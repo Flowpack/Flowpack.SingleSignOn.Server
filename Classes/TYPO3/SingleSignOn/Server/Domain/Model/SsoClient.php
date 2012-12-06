@@ -27,7 +27,7 @@ class SsoClient {
 	 * @Flow\Identity
 	 * @var string
 	 */
-	protected $baseUri;
+	protected $serviceBaseUri;
 
 	/**
 	 * The public key (uuid)
@@ -35,12 +35,6 @@ class SsoClient {
 	 * @Flow\Validate(type="NotEmpty")
 	 */
 	protected $publicKey = '';
-
-	/**
-	 * The service base path
-	 * @var string
-	 */
-	protected $serviceBasePath = '';
 
 	/**
 	 * @Flow\Inject
@@ -65,36 +59,39 @@ class SsoClient {
 	 * @return void
 	 */
 	public function destroySession(SsoServer $ssoServer, $sessionId) {
-		$serviceUri = new Uri(rtrim($this->baseUri, '/') . '/' . trim($this->serviceBasePath, '/') . '/session/' . urlencode($sessionId) . '/destroy');
+		$serviceUri = new Uri(rtrim($this->serviceBaseUri, '/') . '/session/' . urlencode($sessionId) . '/destroy');
 		$serviceUri->setQuery(http_build_query(array('serverIdentifier' => $ssoServer->getServiceBaseUri())));
 		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'DELETE');
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoServer->getKeyPairUuid(), $ssoServer->getKeyPairUuid());
 
 		$response = $this->requestEngine->sendRequest($signedRequest);
+
+		if ($response->getStatusCode() === 404 && $response->getHeader('Content-Type') === 'application/json') {
+			$data = json_decode($response->getContent(), TRUE);
+			if (is_array($data) && isset($data['error']) && $data['error'] === 'SessionNotFound') {
+				return;
+			}
+		}
+
 		if ($response->getStatusCode() !== 200) {
 			throw new Exception('Unexpected status code for destroy session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354132939);
 		}
 	}
 
 	/**
-	 * Get the Sso client's identifier
-	 *
-	 * @return string The Sso client's identifier
+	 * @param string $serviceBaseUri
 	 */
-	public function getBaseUri() {
-		return $this->baseUri;
+	public function setServiceBaseUri($serviceBaseUri) {
+		$serviceBaseUri = rtrim($serviceBaseUri, '/') . '/';
+		$this->serviceBaseUri = $serviceBaseUri;
 	}
 
 	/**
-	 * Sets this Sso client's identifier
-	 *
-	 * @param string $baseUri The Sso client's identifier
-	 * @return void
+	 * @return string
 	 */
-	public function setBaseUri($baseUri) {
-		$baseUri = rtrim($baseUri, '/') . '/';
-		$this->baseUri = $baseUri;
+	public function getServiceBaseUri() {
+		return $this->serviceBaseUri;
 	}
 
 	/**
@@ -114,20 +111,6 @@ class SsoClient {
 	 */
 	public function setPublicKey($publicKey) {
 		$this->publicKey = $publicKey;
-	}
-
-	/**
-	 * @param string $serviceBasePath
-	 */
-	public function setServiceBasePath($serviceBasePath) {
-		$this->serviceBasePath = $serviceBasePath;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getServiceBasePath() {
-		return $this->serviceBasePath;
 	}
 
 }

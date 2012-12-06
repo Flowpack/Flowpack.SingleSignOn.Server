@@ -88,7 +88,7 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 			if (!is_array($registeredClients)) {
 				$registeredClients = array();
 			}
-			$registeredClients[$ssoClient->getBaseUri()] = $clientSessionId;
+			$registeredClients[$ssoClient->getServiceBaseUri()] = $clientSessionId;
 			$session->putData('TYPO3_SingleSignOn_Clients', $registeredClients);
 		}
 

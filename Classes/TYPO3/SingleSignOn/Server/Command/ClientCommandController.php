@@ -42,7 +42,7 @@ class ClientCommandController extends \TYPO3\Flow\Cli\CommandController {
 		}
 
 		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
-		$ssoClient->setBaseUri($baseUri);
+		$ssoClient->setServiceBaseUri($baseUri);
 		$ssoClient->setPublicKey($publicKey);
 		$this->ssoClientRepository->add($ssoClient);
 	}
