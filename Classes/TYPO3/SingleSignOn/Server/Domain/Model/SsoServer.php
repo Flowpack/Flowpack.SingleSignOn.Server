@@ -17,6 +17,12 @@ use TYPO3\Flow\Http\Uri;
 class SsoServer {
 
 	/**
+	 * The service base URI where SSO webservices are mounted
+	 * @var string
+	 */
+	protected $serviceBaseUri;
+
+	/**
 	 * The server key pair uuid
 	 * @var string
 	 */
@@ -96,10 +102,24 @@ class SsoServer {
 	public function createAccessToken(SsoClient $ssoClient, \TYPO3\Flow\Security\Account $account) {
 		$accessToken = new \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken();
 		$accessToken->setAccount($account);
-		$accessToken->setExpiryTime(time() + 60);
+		$accessToken->setExpiryTime(time() + \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken::DEFAULT_VALIDITY_TIME);
 		$accessToken->setSessionId($this->session->getId());
 		$accessToken->setSsoClient($ssoClient);
 		return $accessToken;
+	}
+
+	/**
+	 * @param string $serviceBaseUri
+	 */
+	public function setServiceBaseUri($serviceBaseUri) {
+		$this->serviceBaseUri = $serviceBaseUri;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getServiceBaseUri() {
+		return $this->serviceBaseUri;
 	}
 
 	/**

@@ -19,6 +19,11 @@ class SsoServerFactory {
 	/**
 	 * @var string
 	 */
+	protected $serverServiceBaseUri;
+
+	/**
+	 * @var string
+	 */
 	protected $serverKeyPairUuid;
 
 	/**
@@ -28,6 +33,9 @@ class SsoServerFactory {
 	 * @return void
 	 */
 	public function injectSettings(array $settings) {
+		if (isset($settings['server']['serviceBaseUri'])) {
+			$this->serverServiceBaseUri = $settings['server']['serviceBaseUri'];
+		}
 		if (isset($settings['server']['keyPairUuid'])) {
 			$this->serverKeyPairUuid = $settings['server']['keyPairUuid'];
 		}
@@ -40,6 +48,10 @@ class SsoServerFactory {
 	 */
 	public function create() {
 		$ssoServer = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoServer();
+		if ((string)$this->serverServiceBaseUri === '') {
+			throw new Exception('Missing TYPO3.SingleSignOn.Server.server.serviceBaseUri setting', 1354805519);
+		}
+		$ssoServer->setServiceBaseUri($this->serverServiceBaseUri);
 		if ((string)$this->serverKeyPairUuid === '') {
 			throw new Exception('Missing TYPO3.SingleSignOn.Server.server.keyPairUuid setting', 1351699834);
 		}

@@ -19,6 +19,11 @@ use Doctrine\ORM\Mapping as ORM;
 class AccessToken {
 
 	/**
+	 * Default validity of an access token until it's considered expired
+	 */
+	const DEFAULT_VALIDITY_TIME = 60;
+
+	/**
 	 * The identifier of the access token
 	 * @ORM\Id
 	 * @Flow\Identity

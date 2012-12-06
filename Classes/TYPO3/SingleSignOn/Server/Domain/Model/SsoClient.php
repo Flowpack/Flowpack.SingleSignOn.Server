@@ -65,13 +65,12 @@ class SsoClient {
 	 * @return void
 	 */
 	public function destroySession(SsoServer $ssoServer, $sessionId) {
-		$serviceUri = rtrim($this->baseUri, '/') . '/' . trim($this->serviceBasePath, '/') . '/session/' . urlencode($sessionId) . '/destroy';
-		$request = \TYPO3\Flow\Http\Request::create(new Uri($serviceUri), 'DELETE');
-		$request->setContent('');
+		$serviceUri = new Uri(rtrim($this->baseUri, '/') . '/' . trim($this->serviceBasePath, '/') . '/session/' . urlencode($sessionId) . '/destroy');
+		$serviceUri->setQuery(http_build_query(array('serverIdentifier' => $ssoServer->getServiceBaseUri())));
+		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'DELETE');
 
 		$signedRequest = $this->requestSigner->signRequest($request, $ssoServer->getKeyPairUuid(), $ssoServer->getKeyPairUuid());
 
-		// TODO Send request asynchronously
 		$response = $this->requestEngine->sendRequest($signedRequest);
 		if ($response->getStatusCode() !== 200) {
 			throw new Exception('Unexpected status code for destroy session when calling "' . (string)$serviceUri . '": "' . $response->getStatus() . '"', 1354132939);
