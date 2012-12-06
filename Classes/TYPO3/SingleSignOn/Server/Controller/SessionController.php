@@ -92,6 +92,8 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$registeredClients = array();
 			}
 
+			// TODO Log client identifier
+
 			$session->destroy('Destroyed by session REST service');
 
 			$ssoServer = $this->ssoServerFactory->create();
@@ -103,6 +105,8 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->view->assign('value', array('success' => TRUE));
 		} else {
 			$this->response->setStatus(404);
+
+			$this->view->assign('value', array('error' => 'SessionNotFound'));
 		}
 	}
 
