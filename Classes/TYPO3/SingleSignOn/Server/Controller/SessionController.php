@@ -76,7 +76,7 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * DELETE /sso/session/xyz-123/destroy
 	 *
 	 * @param string $sessionId The session id
-	 * @param string $clientIdentifier Optional client identifier
+	 * @param string $clientIdentifier Optional client identifier that will be added to any session destroy message
 	 */
 	public function destroyAction($sessionId, $clientIdentifier = NULL) {
 		if ($this->request->getHttpRequest()->getMethod() !== 'DELETE') {
@@ -100,9 +100,9 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$session->destroy($message);
 
 			$ssoServer = $this->ssoServerFactory->create();
-			foreach ($registeredClients as $clientIdentifier => $clientSessionId) {
-				$ssoClient = $this->ssoClientRepository->findByIdentifier($clientIdentifier);
-				$ssoClient->destroySession($ssoServer, $clientSessionId);
+			foreach ($registeredClients as $registeredClientIdentifier) {
+				$ssoClient = $this->ssoClientRepository->findByIdentifier($registeredClientIdentifier);
+				$ssoClient->destroySession($ssoServer, $sessionId);
 			}
 
 			$this->view->assign('value', array('success' => TRUE));

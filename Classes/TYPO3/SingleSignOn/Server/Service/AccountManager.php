@@ -84,11 +84,13 @@ class AccountManager {
 			$registeredClients = array();
 		}
 
+		$sessionId = $this->session->getId();
+
 		$ssoServer = $this->ssoServerFactory->create();
-		foreach ($registeredClients as $clientIdentifier => $clientSessionId) {
-			$ssoClient = $this->ssoClientRepository->findByIdentifier($clientIdentifier);
+		foreach ($registeredClients as $registeredClientIdentifier) {
+			$ssoClient = $this->ssoClientRepository->findByIdentifier($registeredClientIdentifier);
 			if ($ssoClient instanceof \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient) {
-				$ssoClient->destroySession($ssoServer, $clientSessionId);
+				$ssoClient->destroySession($ssoServer, $sessionId);
 			} else {
 				// TODO Log or ignore missing client
 			}

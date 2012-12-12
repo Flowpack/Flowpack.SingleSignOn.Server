@@ -54,9 +54,8 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	 * POST token/{accessToken}/redeem?clientSessionId=abc
 	 *
 	 * @param string $accessToken
-	 * @param string $clientSessionId
 	 */
-	public function redeemAction($accessToken, $clientSessionId = NULL) {
+	public function redeemAction($accessToken) {
 		if ($this->request->getHttpRequest()->getMethod() !== 'POST') {
 			$this->response->setStatus(405);
 			$this->response->setHeader('Allow', 'POST');
@@ -82,15 +81,13 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 
 		// TODO Move the actual logic of redemption and client registration to a service
 
-		if ($clientSessionId !== NULL) {
-			$ssoClient = $accessTokenObject->getSsoClient();
-			$registeredClients = $session->getData('TYPO3_SingleSignOn_Clients');
-			if (!is_array($registeredClients)) {
-				$registeredClients = array();
-			}
-			$registeredClients[$ssoClient->getServiceBaseUri()] = $clientSessionId;
-			$session->putData('TYPO3_SingleSignOn_Clients', $registeredClients);
+		$ssoClient = $accessTokenObject->getSsoClient();
+		$registeredClients = $session->getData('TYPO3_SingleSignOn_Clients');
+		if (!is_array($registeredClients)) {
+			$registeredClients = array();
 		}
+		$registeredClients[] = $ssoClient->getServiceBaseUri();
+		$session->putData('TYPO3_SingleSignOn_Clients', array_unique($registeredClients));
 
 		// TODO Get the account from the global session
 		// TODO What to do with multiple accounts?

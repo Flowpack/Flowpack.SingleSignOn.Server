@@ -68,7 +68,9 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		));
 		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient', array(
+			'getServiceBaseUri' => 'http://ssodemoinstance/'
+		));
 		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getSessionId' => 'test-sessionid',
 			'getAccount' => $mockAccount,
@@ -84,7 +86,9 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'clientAccountMapper', $mockClientAccountMapper);
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$mockSession = m::mock('TYPO3\Flow\Session\SessionInterface', array(
-			'isStarted' => TRUE
+			'isStarted' => TRUE,
+			'getData' => array(),
+			'putData' => NULL
 		));
 		$mockSessionManager->shouldReceive('getSession')->with('test-sessionid')->andReturn($mockSession);
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
@@ -109,7 +113,9 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		));
 		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient', array(
+			'getServiceBaseUri' => 'http://ssodemoinstance/'
+		));
 		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getSessionId' => 'test-sessionid',
 			'getAccount' => $mockAccount,
@@ -130,7 +136,9 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'clientAccountMapper', $mockClientAccountMapper);
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$mockSession = m::mock('TYPO3\Flow\Session\SessionInterface', array(
-			'isStarted' => TRUE
+			'isStarted' => TRUE,
+			'getData' => array(),
+			'putData' => NULL
 		));
 		$mockSessionManager->shouldReceive('getSession')->with('test-sessionid')->andReturn($mockSession);
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
