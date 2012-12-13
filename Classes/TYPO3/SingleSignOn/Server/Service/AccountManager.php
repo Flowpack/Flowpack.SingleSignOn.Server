@@ -42,6 +42,18 @@ class AccountManager {
 	protected $ssoClientRepository;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Session\SsoSessionManager
+	 */
+	protected $singleSignOnSessionManager;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface
+	 */
+	protected $ssoClientNotifier;
+
+	/**
 	 * Get the currently active account for any SSO client (for the current session)
 	 *
 	 * @return \TYPO3\Flow\Security\Account
@@ -79,22 +91,12 @@ class AccountManager {
 	 * @return void
 	 */
 	public function onLoggedOut() {
-		$registeredClients = $this->session->getData('TYPO3_SingleSignOn_Clients');
-		if (!is_array($registeredClients)) {
-			$registeredClients = array();
-		}
+		$ssoClients = $this->singleSignOnSessionManager->getRegisteredSsoClients($this->session);
 
 		$sessionId = $this->session->getId();
 
 		$ssoServer = $this->ssoServerFactory->create();
-		foreach ($registeredClients as $registeredClientIdentifier) {
-			$ssoClient = $this->ssoClientRepository->findByIdentifier($registeredClientIdentifier);
-			if ($ssoClient instanceof \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient) {
-				$ssoClient->destroySession($ssoServer, $sessionId);
-			} else {
-				// TODO Log or ignore missing client
-			}
-		}
+		$this->ssoClientNotifier->destroySession($ssoServer, $sessionId, $ssoClients);
 	}
 
 }

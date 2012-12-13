@@ -7,3 +7,19 @@ TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository:
         arguments:
           1:
             value: TYPO3_SingleSignOn_Server_AccessToken_Storage
+
+TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface:
+  className: TYPO3\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier
+
+TYPO3\Flow\Log\SystemLoggerInterface:
+  scope: singleton
+  factoryObjectName: TYPO3\Flow\Log\LoggerFactory
+  arguments:
+    1:
+      value: 'SingleSignOn_Server'
+    2:
+      value: 'TYPO3\Flow\Log\Logger'
+    3:
+      setting: TYPO3.SingleSignOn.Server.log.backend
+    4:
+      setting: TYPO3.SingleSignOn.Server.log.backendOptions

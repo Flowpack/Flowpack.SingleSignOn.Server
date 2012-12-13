@@ -38,6 +38,12 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	protected $sessionManager;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Session\SsoSessionManager
+	 */
+	protected $singleSignOnSessionManager;
+
+	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -79,15 +85,10 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 
 		$this->accessTokenRepository->remove($accessTokenObject);
 
-		// TODO Move the actual logic of redemption and client registration to a service
+		// TODO Move the actual logic of redemption to a service
 
 		$ssoClient = $accessTokenObject->getSsoClient();
-		$registeredClients = $session->getData('TYPO3_SingleSignOn_Clients');
-		if (!is_array($registeredClients)) {
-			$registeredClients = array();
-		}
-		$registeredClients[] = $ssoClient->getServiceBaseUri();
-		$session->putData('TYPO3_SingleSignOn_Clients', array_unique($registeredClients));
+		$this->singleSignOnSessionManager->registerSsoClient($session, $ssoClient);
 
 		// TODO Get the account from the global session
 		// TODO What to do with multiple accounts?

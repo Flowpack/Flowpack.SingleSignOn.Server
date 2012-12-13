@@ -68,9 +68,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		));
 		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient', array(
-			'getServiceBaseUri' => 'http://ssodemoinstance/'
-		));
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
 		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getSessionId' => 'test-sessionid',
 			'getAccount' => $mockAccount,
@@ -86,14 +84,16 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'clientAccountMapper', $mockClientAccountMapper);
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$mockSession = m::mock('TYPO3\Flow\Session\SessionInterface', array(
-			'isStarted' => TRUE,
-			'getData' => array(),
-			'putData' => NULL
+			'isStarted' => TRUE
 		));
 		$mockSessionManager->shouldReceive('getSession')->with('test-sessionid')->andReturn($mockSession);
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
 		$this->inject($controller, 'uriBuilder', m::mock('TYPO3\Flow\Mvc\Routing\UriBuilder')->shouldIgnoreMissing());
 		$this->inject($controller, 'view', m::mock('TYPO3\Flow\Mvc\View\ViewInterface')->shouldIgnoreMissing());
+		$mockSingleSignOnSessionManager= m::mock('TYPO3\SingleSignOn\Server\Session\SsoSessionManager', array(
+			'registerSsoClient' => NULL
+		));
+		$this->inject($controller, 'singleSignOnSessionManager', $mockSingleSignOnSessionManager);
 
 		$mockAccessTokenRepository->shouldReceive('remove')->with($mockAccessToken)->once();
 
@@ -113,9 +113,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		));
 		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient', array(
-			'getServiceBaseUri' => 'http://ssodemoinstance/'
-		));
+		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
 		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getSessionId' => 'test-sessionid',
 			'getAccount' => $mockAccount,
@@ -134,11 +132,13 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'getAccountData' => $accountData
 		));
 		$this->inject($controller, 'clientAccountMapper', $mockClientAccountMapper);
+		$mockSingleSignOnSessionManager= m::mock('TYPO3\SingleSignOn\Server\Session\SsoSessionManager', array(
+			'registerSsoClient' => NULL
+		));
+		$this->inject($controller, 'singleSignOnSessionManager', $mockSingleSignOnSessionManager);
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$mockSession = m::mock('TYPO3\Flow\Session\SessionInterface', array(
-			'isStarted' => TRUE,
-			'getData' => array(),
-			'putData' => NULL
+			'isStarted' => TRUE
 		));
 		$mockSessionManager->shouldReceive('getSession')->with('test-sessionid')->andReturn($mockSession);
 		$this->inject($controller, 'sessionManager', $mockSessionManager);

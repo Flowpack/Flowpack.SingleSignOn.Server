@@ -11,6 +11,15 @@ TYPO3:
         serviceBaseUri: ''
         # Mandatory key pair uuid (fingerprint) for the SSO server
         keyPairUuid: ''
+      log:
+        backend: TYPO3\Flow\Log\Backend\FileBackend
+        backendOptions:
+          logFileURL: %FLOW_PATH_DATA%Logs/SingleSignOn_Server.log
+          createParentDirectories: TRUE
+          severityThreshold: %LOG_WARN%
+          maximumLogFileSize: 10485760
+          logFilesToKeep: 1
+          logMessageOrigin: FALSE
 
   Flow:
     security:
