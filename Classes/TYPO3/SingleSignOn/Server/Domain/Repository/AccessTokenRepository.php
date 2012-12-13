@@ -58,5 +58,14 @@ class AccessTokenRepository {
 		$this->cache->remove($accessToken->getIdentifier());
 	}
 
+	/**
+	 * Remove all access tokens from persistence
+	 *
+	 * @return void
+	 */
+	public function removeAll() {
+		$this->cache->flush();
+	}
+
 }
 ?>
