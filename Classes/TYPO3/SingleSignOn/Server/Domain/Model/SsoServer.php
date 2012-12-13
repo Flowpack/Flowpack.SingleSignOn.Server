@@ -80,12 +80,12 @@ class SsoServer {
 		$accessTokenCipher = $this->rsaWalletService->encryptWithPublicKey($accessToken->getIdentifier(), $ssoClient->getPublicKey());
 		$signature = $this->rsaWalletService->sign($accessTokenCipher, $this->keyPairUuid);
 
-		$uri = new Uri($callbackUri);
+		$uri = new Uri($ssoClient->getServiceBaseUri() . 'authentication/callback');
 		$query = $uri->getQuery();
 		if ($query !== '') {
 			$query = $query . '&';
 		}
-		$query .= '__typo3[singlesignon][accessToken]=' . urlencode(base64_encode($accessTokenCipher)) . '&__typo3[singlesignon][signature]=' . urlencode(base64_encode($signature));
+		$query .= 'callbackUri=' . urlencode($callbackUri) . '&__typo3[singlesignon][accessToken]=' . urlencode(base64_encode($accessTokenCipher)) . '&__typo3[singlesignon][signature]=' . urlencode(base64_encode($signature));
 		$uri->setQuery($query);
 		return $uri;
 	}
