@@ -7,14 +7,11 @@ namespace TYPO3\SingleSignOn\Server\Domain\Model;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * SSO Access Token
  *
  * A client bound one-time key to transfer the session id in a safe manner.
- *
- * @Flow\Entity
  */
 class AccessToken {
 
@@ -25,8 +22,6 @@ class AccessToken {
 
 	/**
 	 * The identifier of the access token
-	 * @ORM\Id
-	 * @Flow\Identity
 	 * @var string
 	 */
 	protected $identifier;
@@ -46,15 +41,11 @@ class AccessToken {
 	/**
 	 * The SSO client that initiated the request
 	 * @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient
-	 * @ORM\ManyToOne
-	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	protected $ssoClient;
 
 	/**
 	 * @var \TYPO3\Flow\Security\Account
-	 * @ORM\ManyToOne
-	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	protected $account;
 
@@ -72,16 +63,6 @@ class AccessToken {
 	 */
 	public function getIdentifier() {
 		return $this->identifier;
-	}
-
-	/**
-	 * Sets this Access token's identifier
-	 *
-	 * @param string $identifier The Access token's identifier
-	 * @return void
-	 */
-	public function setIdentifier($identifier) {
-		$this->identifier = $identifier;
 	}
 
 	/**
