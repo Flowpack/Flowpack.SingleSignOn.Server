@@ -6,12 +6,12 @@ namespace TYPO3\SingleSignOn\Server\Domain\Repository;
  *                                                                        *
  *                                                                        */
 
-use TYPO3\Flow\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * A repository for SSO Clients
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
 class SsoClientRepository extends \TYPO3\Flow\Persistence\Repository {
 

@@ -11,7 +11,7 @@ TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository:
 TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface:
   className: TYPO3\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier
 
-TYPO3\Flow\Log\SystemLoggerInterface:
+TYPO3\SingleSignOn\Server\Log\SsoLoggerInterface:
   scope: singleton
   factoryObjectName: TYPO3\Flow\Log\LoggerFactory
   arguments:
@@ -23,3 +23,12 @@ TYPO3\Flow\Log\SystemLoggerInterface:
       setting: TYPO3.SingleSignOn.Server.log.backend
     4:
       setting: TYPO3.SingleSignOn.Server.log.backendOptions
+
+TYPO3\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier:
+  properties:
+    requestEngine:
+      object:
+        name: TYPO3\SingleSignOn\Server\Http\MultiCurlEngine
+        properties:
+          timeout:
+            value: 10

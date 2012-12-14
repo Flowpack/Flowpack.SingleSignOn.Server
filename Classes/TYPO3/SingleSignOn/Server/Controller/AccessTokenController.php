@@ -44,6 +44,12 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 	protected $singleSignOnSessionManager;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Log\SsoLoggerInterface
+	 */
+	protected $ssoLogger;
+
+	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -94,6 +100,10 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		// TODO What to do with multiple accounts?
 		$account = $accessTokenObject->getAccount();
 		$accountData = $this->clientAccountMapper->getAccountData($accessTokenObject->getSsoClient(), $account);
+
+		if ($this->ssoLogger !== NULL) {
+			$this->ssoLogger->log('Redeemed access token "' . $accessToken . '" from client "' . $ssoClient->getServiceBaseUri() . '" for session "' . $sessionId . '" and account "' . $account->getAccountIdentifier() . '"', LOG_INFO);
+		}
 
 		$sessionBaseUri = $this->uriBuilder->uriFor('show', array('sessionId' => $sessionId), 'Session', 'TYPO3.SingleSignOn.Server', '');
 		$this->response->setHeader('Location', $sessionBaseUri);

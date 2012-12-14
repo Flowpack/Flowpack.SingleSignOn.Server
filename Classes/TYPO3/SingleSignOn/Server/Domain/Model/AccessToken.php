@@ -131,5 +131,12 @@ class AccessToken {
 		return $this->account;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->identifier;
+	}
+
 }
 ?>

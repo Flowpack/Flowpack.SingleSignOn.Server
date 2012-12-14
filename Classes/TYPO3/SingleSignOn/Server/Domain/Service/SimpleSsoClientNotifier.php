@@ -6,14 +6,14 @@ namespace TYPO3\SingleSignOn\Server\Domain\Service;
  *                                                                        *
  *                                                                        */
 
-use TYPO3\Flow\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * A simple notification strategy for SSO clients
  *
  * Will synchronously call the session REST service on each client.
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
 class SimpleSsoClientNotifier implements SsoClientNotifierInterface {
 

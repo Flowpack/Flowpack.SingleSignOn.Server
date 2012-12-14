@@ -124,5 +124,11 @@ class SsoClient {
 		$this->publicKey = $publicKey;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->serviceBaseUri;
+	}
 }
 ?>

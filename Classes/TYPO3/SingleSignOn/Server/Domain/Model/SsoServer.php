@@ -136,5 +136,12 @@ class SsoServer {
 		return $this->keyPairUuid;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->serviceBaseUri;
+	}
+
 }
 ?>

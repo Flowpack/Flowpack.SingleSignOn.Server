@@ -6,21 +6,27 @@ namespace TYPO3\SingleSignOn\Server\Domain\Service;
  *                                                                        *
  *                                                                        */
 
-use TYPO3\Flow\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * A notification strategy for SSO clients that runs in parallel
  *
  * Will synchronously call the session REST service on each client.
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
 class ParallelSsoClientNotifier implements SsoClientNotifierInterface {
 
 	/**
+	 * @Flow\Inject
 	 * @var \TYPO3\SingleSignOn\Server\Log\SsoLoggerInterface
 	 */
 	protected $ssoLogger;
+
+	/**
+	 * @var \TYPO3\SingleSignOn\Server\Http\MultiCurlEngine
+	 */
+	protected $requestEngine;
 
 	/**
 	 * Destroy SSO client sessions by iterating through all clients
@@ -31,14 +37,14 @@ class ParallelSsoClientNotifier implements SsoClientNotifierInterface {
 	 * @return void
 	 */
 	public function destroySession(\TYPO3\SingleSignOn\Server\Domain\Model\SsoServer $ssoServer, $sessionId, array $ssoClients) {
-		$engine = new \TYPO3\SingleSignOn\Server\Http\MultiCurlEngine();
 		$requests = array();
 		foreach ($ssoClients as $ssoClient) {
 			/** @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient */
 			$request = $ssoClient->buildDestroySessionRequest($ssoServer, $sessionId);
+			$this->ssoLogger->log('Destroying session "' . $sessionId . '" on client ' . $ssoClient->getServiceBaseUri(), LOG_INFO);
 			$requests[] = $request;
 		}
-		$responses = $engine->sendRequests($requests);
+		$responses = $this->requestEngine->sendRequests($requests);
 
 		foreach ($responses as $index => $response) {
 			if ($response instanceof \TYPO3\Flow\Http\Exception) {
@@ -57,6 +63,13 @@ class ParallelSsoClientNotifier implements SsoClientNotifierInterface {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param \TYPO3\SingleSignOn\Server\Http\MultiCurlEngine $requestEngine
+	 */
+	public function setRequestEngine($requestEngine) {
+		$this->requestEngine = $requestEngine;
 	}
 
 }

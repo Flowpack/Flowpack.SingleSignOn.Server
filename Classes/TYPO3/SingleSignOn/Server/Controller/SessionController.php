@@ -49,6 +49,12 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $ssoClientNotifier;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Log\SsoLoggerInterface
+	 */
+	protected $ssoLogger;
+
+	/**
 	 * @var string
 	 */
 	protected $defaultViewObjectName = 'TYPO3\Flow\Mvc\View\JsonView';
@@ -75,6 +81,10 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$session = $this->sessionManager->getSession($sessionId);
 		if ($session !== NULL) {
 			$session->touch();
+
+			if ($this->ssoLogger !== NULL) {
+				$this->ssoLogger->log('Touched session "' . $sessionId . '"' , LOG_DEBUG);
+			}
 
 			$this->view->assign('value', array('success' => TRUE));
 		} else {
@@ -107,6 +117,10 @@ class SessionController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$message .= ' from client "' . $clientIdentifier . '"';
 			}
 			$session->destroy($message);
+
+			if ($this->ssoLogger !== NULL) {
+				$this->ssoLogger->log('Session service: Destroyed session "' . $sessionId . '"' . ($clientIdentifier !== NULL ? ' from client ' . $clientIdentifier : '') , LOG_INFO);
+			}
 
 			$ssoServer = $this->ssoServerFactory->create();
 			$this->ssoClientNotifier->destroySession($ssoServer, $sessionId, $ssoClients);

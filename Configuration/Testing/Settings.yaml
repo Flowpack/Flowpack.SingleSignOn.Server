@@ -2,13 +2,19 @@ TYPO3:
   SingleSignOn:
     Server:
       server:
+        # Fixtures for functional tests
         keyPairUuid: 'bb5abb57faa122cc031e3c904db3d751'
+      log:
+        backend: TYPO3\Flow\Log\Backend\NullBackend
+
     Client:
       client:
+        # Fixtures for functional tests
         serviceBaseUri: 'http://ssoclient/sso'
         keyPairUuid: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
       server:
         TestServer:
+          # Fixtures for functional tests
           publicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
           serviceBaseUri: 'http://ssoserver/test/sso'
 

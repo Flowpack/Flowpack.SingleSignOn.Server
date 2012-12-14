@@ -55,6 +55,12 @@ class EndpointController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $accountManager;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Log\SsoLoggerInterface
+	 */
+	protected $ssoLogger;
+
+	/**
 	 * Authenticate action
 	 *
 	 * - Verifies the given arguments
@@ -84,6 +90,10 @@ class EndpointController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		$accessToken = $ssoServer->createAccessToken($ssoClient, $account);
 		$this->accessTokenRepository->add($accessToken);
+
+		if ($this->ssoLogger !== NULL) {
+			$this->ssoLogger->log('Started SSO authentication for client "' . $ssoClient->getServiceBaseUri() . ' with access token "' . $accessToken . '"' , LOG_INFO);
+		}
 
 		$redirectUri = $ssoServer->buildCallbackRedirectUri($ssoClient, $accessToken, $callbackUri);
 		$this->redirectToUri($redirectUri);

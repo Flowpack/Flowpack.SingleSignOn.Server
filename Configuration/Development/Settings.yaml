@@ -1,0 +1,7 @@
+TYPO3:
+  SingleSignOn:
+    Server:
+      log:
+        backendOptions:
+          logFileURL: %FLOW_PATH_DATA%Logs/SingleSignOn_Server_Development.log
+          severityThreshold: %LOG_INFO%
