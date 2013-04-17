@@ -14,6 +14,8 @@ use TYPO3\Flow\Annotations as Flow;
  * The account manager gets accounts for SSO clients and the
  * authenticated account on the server. It also handles account switching to deliver
  * a different account to a client than the authenticated account.
+ *
+ * @Flow\Scope("session")
  */
 class AccountManager {
 
@@ -31,27 +33,15 @@ class AccountManager {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory
-	 */
-	protected $ssoServerFactory;
-
-	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\SsoClientRepository
-	 */
-	protected $ssoClientRepository;
-
-	/**
-	 * @Flow\Inject
 	 * @var \TYPO3\SingleSignOn\Server\Session\SsoSessionManager
 	 */
 	protected $singleSignOnSessionManager;
 
 	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface
+	 * The currently impersonated account (NULL if no account is impersonated)
+	 * @var \TYPO3\Flow\Security\Account
 	 */
-	protected $ssoClientNotifier;
+	protected $impersonatedAccount;
 
 	/**
 	 * Get the currently active account for any SSO client (for the current session)
@@ -59,9 +49,11 @@ class AccountManager {
 	 * @return \TYPO3\Flow\Security\Account
 	 */
 	public function getClientAccount() {
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		// TODO Return impersonated account (if any)
-		return $account;
+		if ($this->impersonatedAccount !== NULL) {
+			return $this->impersonatedAccount;
+		} else {
+			return $this->authenticationManager->getSecurityContext()->getAccount();
+		}
 	}
 
 	/**
@@ -77,26 +69,35 @@ class AccountManager {
 	/**
 	 * Impersonate another account
 	 *
+	 * Destroys registered client sessions to force re-authentication.
+	 *
 	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return void
 	 */
 	public function impersonateAccount(\TYPO3\Flow\Security\Account $account) {
-		// TODO Implement
-		// TODO Emit signal (for client notification)
+		$this->impersonatedAccount = $account;
+
+		$this->destroyRegisteredClientSessions();
+
+		$this->emitAccountImpersonated($account);
 	}
 
 	/**
-	 * Called on logout of the active account (through the server)
+	 * @param \TYPO3\Flow\Security\Account $account The impersonated account
+	 * @Flow\Signal
+	 */
+	protected function emitAccountImpersonated(\TYPO3\Flow\Security\Account $account) {}
+
+	/**
+	 * Destroy the SSO session on all registered SSO clients of the current session
+	 *
+ 	 * Called on logout of the active account on the server through
+	 * AuthenticationProviderManager->loggedOut signal.
 	 *
 	 * @return void
 	 */
-	public function onLoggedOut() {
-		$ssoClients = $this->singleSignOnSessionManager->getRegisteredSsoClients($this->session);
-
-		$sessionId = $this->session->getId();
-
-		$ssoServer = $this->ssoServerFactory->create();
-		$this->ssoClientNotifier->destroySession($ssoServer, $sessionId, $ssoClients);
+	public function destroyRegisteredClientSessions() {
+		$this->singleSignOnSessionManager->destroyRegisteredSsoClientSessions($this->session);
 	}
 
 }

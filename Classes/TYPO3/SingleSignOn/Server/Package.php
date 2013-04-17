@@ -22,7 +22,7 @@ class Package extends \TYPO3\Flow\Package\Package {
 			'TYPO3\Flow\Security\Authentication\AuthenticationProviderManager',
 			'loggedOut',
 			'TYPO3\SingleSignOn\Server\Service\AccountManager',
-			'onLoggedOut'
+			'destroyRegisteredClientSessions'
 		);
 	}
 }

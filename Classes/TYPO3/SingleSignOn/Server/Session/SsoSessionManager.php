@@ -22,6 +22,18 @@ class SsoSessionManager {
 	protected $ssoClientRepository;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface
+	 */
+	protected $ssoClientNotifier;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory
+	 */
+	protected $ssoServerFactory;
+
+	/**
 	 * @param \TYPO3\Flow\Session\SessionInterface $session
 	 * @param \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient
 	 * @return void
@@ -51,5 +63,22 @@ class SsoSessionManager {
 		return $ssoClients;
 	}
 
+	/**
+	 * Destroy the given session on registered SSO clients
+	 *
+	 * @param \TYPO3\Flow\Session\SessionInterface $session
+	 * @return void
+	 */
+	public function destroyRegisteredSsoClientSessions($session) {
+		if (!$session->isStarted()) {
+			return;
+		}
+
+		$ssoClients = $this->getRegisteredSsoClients($session);
+		$sessionId = $session->getId();
+
+		$ssoServer = $this->ssoServerFactory->create();
+		$this->ssoClientNotifier->destroySession($ssoServer, $sessionId, $ssoClients);
+	}
 }
 ?>
