@@ -22,7 +22,7 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('jdoe');
-		$account->setRoles(array('Administrator'));
+		$account->setRoles(array(new \TYPO3\Flow\Security\Policy\Role('Administrator')));
 
 		$mapper = new \TYPO3\SingleSignOn\Server\Service\SimpleClientAccountMapper();
 		$data = $mapper->getAccountData($ssoClient, $account);
@@ -41,7 +41,7 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('jdoe');
-		$account->setRoles(array('Administrator'));
+		$account->setRoles(array(new \TYPO3\Flow\Security\Policy\Role('Administrator')));
 
 		$party = new \TYPO3\Party\Domain\Model\Person();
 		$party->setName(new \TYPO3\Party\Domain\Model\PersonName('', 'John', '', 'Doe'));
@@ -63,7 +63,7 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('jdoe');
-		$account->setRoles(array('Administrator'));
+		$account->setRoles(array(new \TYPO3\Flow\Security\Policy\Role('Administrator')));
 
 		$party = new \TYPO3\Party\Domain\Model\Person();
 		$party->setName(new \TYPO3\Party\Domain\Model\PersonName('', 'John', '', 'Doe'));

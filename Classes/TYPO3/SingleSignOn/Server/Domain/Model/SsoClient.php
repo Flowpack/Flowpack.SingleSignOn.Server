@@ -86,6 +86,7 @@ class SsoClient {
 		$serviceUri = new Uri(rtrim($this->serviceBaseUri, '/') . '/session/' . urlencode($sessionId) . '/destroy');
 		$serviceUri->setQuery(http_build_query(array('serverIdentifier' => $ssoServer->getServiceBaseUri())));
 		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'DELETE');
+		$request->setContent('');
 
 		return $this->requestSigner->signRequest($request, $ssoServer->getKeyPairUuid(), $ssoServer->getKeyPairUuid());
 	}

@@ -35,9 +35,13 @@ class SimpleClientAccountMapper implements ClientAccountMapperInterface {
 			$configuration = $this->getDefaultConfiguration($ssoClient, $account);
 		}
 		$partyData = $this->transformValue($account->getParty(), $configuration['party']);
+		$mappedRoles = array();
+		foreach ($account->getRoles() as $role) {
+			$mappedRoles[] = $role->getIdentifier();
+		}
 		return array(
 			'accountIdentifier' => $account->getAccountIdentifier(),
-			'roles' => array_map(function($role) { return (string)$role; }, $account->getRoles()),
+			'roles' => $mappedRoles,
 			'party' => $partyData
 		);
 	}
