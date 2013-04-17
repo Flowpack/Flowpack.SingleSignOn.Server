@@ -4,4 +4,7 @@ TYPO3:
       log:
         backendOptions:
           logFileURL: %FLOW_PATH_DATA%Logs/SingleSignOn_Server_Development.log
-          severityThreshold: %LOG_INFO%
+          severityThreshold: %LOG_DEBUG%
+
+        # Optional: Enable logging of request signing (all signed requests)
+        # logRequestSigning: TRUE

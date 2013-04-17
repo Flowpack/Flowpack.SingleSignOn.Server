@@ -21,6 +21,9 @@ TYPO3:
           logFilesToKeep: 1
           logMessageOrigin: FALSE
 
+        # Enable logging of request signing (all signed requests)
+        logRequestSigning: FALSE
+
   Flow:
     security:
       firewall:
