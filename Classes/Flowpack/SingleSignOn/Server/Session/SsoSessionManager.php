@@ -7,6 +7,7 @@ namespace Flowpack\SingleSignOn\Server\Session;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Session\SessionInterface;
 
 /**
  * Single sign-on session manager
@@ -69,7 +70,7 @@ class SsoSessionManager {
 	 * @param \TYPO3\Flow\Session\SessionInterface $session
 	 * @return void
 	 */
-	public function destroyRegisteredSsoClientSessions($session) {
+	public function destroyRegisteredSsoClientSessions(SessionInterface $session) {
 		if (!$session->isStarted()) {
 			return;
 		}

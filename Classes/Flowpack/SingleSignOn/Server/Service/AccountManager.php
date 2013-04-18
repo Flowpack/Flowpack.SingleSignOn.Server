@@ -97,7 +97,9 @@ class AccountManager {
 	 * @return void
 	 */
 	public function destroyRegisteredClientSessions() {
-		$this->singleSignOnSessionManager->destroyRegisteredSsoClientSessions($this->session);
+		if ($this->session->isStarted()) {
+			$this->singleSignOnSessionManager->destroyRegisteredSsoClientSessions($this->session);
+		}
 	}
 
 }
