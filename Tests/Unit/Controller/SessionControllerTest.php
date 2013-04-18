@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Server\Tests\Unit\Controller;
+namespace Flowpack\SingleSignOn\Server\Tests\Unit\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
@@ -17,7 +17,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function destroySessionWithExistingSessionDestroysSession() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -28,16 +28,16 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'view', m::mock('TYPO3\Flow\Mvc\View\ViewInterface')->shouldIgnoreMissing());
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
-		$mockSsoServer = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoServer');
-		$mockSsoServerFactory = m::mock('TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory', array(
+		$mockSsoServer = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoServer');
+		$mockSsoServerFactory = m::mock('Flowpack\SingleSignOn\Server\Domain\Factory\SsoServerFactory', array(
 			'create' => $mockSsoServer
 		));
 		$this->inject($controller, 'ssoServerFactory', $mockSsoServerFactory);
-		$mockSingleSignOnSessionManager = m::mock('TYPO3\SingleSignOn\Server\Service\SsoSessionManager', array(
+		$mockSingleSignOnSessionManager = m::mock('Flowpack\SingleSignOn\Server\Service\SsoSessionManager', array(
 			'getRegisteredSsoClients' => array()
 		));
 		$this->inject($controller, 'singleSignOnSessionManager', $mockSingleSignOnSessionManager);
-		$mockSsoClientNotifier = m::mock('TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface', array(
+		$mockSsoClientNotifier = m::mock('Flowpack\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface', array(
 			'destroySession' => NULL
 		));
 		$this->inject($controller, 'ssoClientNotifier', $mockSsoClientNotifier);
@@ -54,7 +54,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function destroySessionWithExistingSessionRespondsWith200() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -65,16 +65,16 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'view', m::mock('TYPO3\Flow\Mvc\View\ViewInterface')->shouldIgnoreMissing());
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
-		$mockSsoServer = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoServer');
-		$mockSsoServerFactory = m::mock('TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory', array(
+		$mockSsoServer = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoServer');
+		$mockSsoServerFactory = m::mock('Flowpack\SingleSignOn\Server\Domain\Factory\SsoServerFactory', array(
 			'create' => $mockSsoServer
 		));
 		$this->inject($controller, 'ssoServerFactory', $mockSsoServerFactory);
-		$mockSingleSignOnSessionManager= m::mock('TYPO3\SingleSignOn\Server\Service\SsoSessionManager', array(
+		$mockSingleSignOnSessionManager= m::mock('Flowpack\SingleSignOn\Server\Service\SsoSessionManager', array(
 			'getRegisteredSsoClients' => array()
 		));
 		$this->inject($controller, 'singleSignOnSessionManager', $mockSingleSignOnSessionManager);
-		$mockSsoClientNotifier = m::mock('TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface', array(
+		$mockSsoClientNotifier = m::mock('Flowpack\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface', array(
 			'destroySession' => NULL
 		));
 		$this->inject($controller, 'ssoClientNotifier', $mockSsoClientNotifier);
@@ -91,7 +91,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function destroySessionWithUnknownSessionRespondsWith404() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -114,7 +114,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function destroyActionWithInvalidMethodRespondsWith405AndAllowedMethod() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -134,7 +134,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function touchActionWithPostAndValidSessionIdRespondsWith200() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -157,7 +157,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function touchActionWithPostAndValidSessionIdTouchesSession() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -180,7 +180,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function touchActionWithPostAndInvalidSessionIdRespondsWith404AndJsonMessage() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -207,7 +207,7 @@ class SessionControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function touchActionWithInvalidMethodRespondsWith405AndAllowedMethod() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\SessionController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\SessionController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);

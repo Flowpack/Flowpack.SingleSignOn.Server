@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Server\Tests\Unit\Controller;
+namespace Flowpack\SingleSignOn\Server\Tests\Unit\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
@@ -17,7 +17,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function redeemActionWithInvalidMethodRespondsWith405() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\AccessTokenController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\AccessTokenController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -36,7 +36,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function redeemActionWithInvalidAccessTokenRespondsWith404() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\AccessTokenController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\AccessTokenController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -44,7 +44,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'getHttpRequest->getMethod' => 'POST'
 		));
 		$this->inject($controller, 'request', $mockRequest);
-		$mockAccessTokenRepository = m::mock('TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
+		$mockAccessTokenRepository = m::mock('Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
 			'findByIdentifier' => NULL
 		));
 		$this->inject($controller, 'accessTokenRepository', $mockAccessTokenRepository);
@@ -59,7 +59,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function redeemActionWithValidAccessTokenRemovesAccessToken() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\AccessTokenController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\AccessTokenController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -68,17 +68,17 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		));
 		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
-		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
+		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoClient');
+		$mockAccessToken = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getSessionId' => 'test-sessionid',
 			'getAccount' => $mockAccount,
 			'getSsoClient' => $mockSsoClient
 		));
-		$mockAccessTokenRepository = m::mock('TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
+		$mockAccessTokenRepository = m::mock('Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
 			'findByIdentifier' => $mockAccessToken
 		));
 		$this->inject($controller, 'accessTokenRepository', $mockAccessTokenRepository);
-		$mockClientAccountMapper = m::mock('TYPO3\SingleSignOn\Server\Service\ClientAccountMapperInterface', array(
+		$mockClientAccountMapper = m::mock('Flowpack\SingleSignOn\Server\Service\ClientAccountMapperInterface', array(
 			'getAccountData' => array()
 		));
 		$this->inject($controller, 'clientAccountMapper', $mockClientAccountMapper);
@@ -90,7 +90,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->inject($controller, 'sessionManager', $mockSessionManager);
 		$this->inject($controller, 'uriBuilder', m::mock('TYPO3\Flow\Mvc\Routing\UriBuilder')->shouldIgnoreMissing());
 		$this->inject($controller, 'view', m::mock('TYPO3\Flow\Mvc\View\ViewInterface')->shouldIgnoreMissing());
-		$mockSingleSignOnSessionManager= m::mock('TYPO3\SingleSignOn\Server\Session\SsoSessionManager', array(
+		$mockSingleSignOnSessionManager= m::mock('Flowpack\SingleSignOn\Server\Session\SsoSessionManager', array(
 			'registerSsoClient' => NULL
 		));
 		$this->inject($controller, 'singleSignOnSessionManager', $mockSingleSignOnSessionManager);
@@ -104,7 +104,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function redeemActionWithValidAccessTokenMapsAccountData() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\AccessTokenController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\AccessTokenController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -113,13 +113,13 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		));
 		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
-		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
+		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoClient');
+		$mockAccessToken = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getSessionId' => 'test-sessionid',
 			'getAccount' => $mockAccount,
 			'getSsoClient' => $mockSsoClient
 		));
-		$mockAccessTokenRepository = m::mock('TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
+		$mockAccessTokenRepository = m::mock('Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
 			'findByIdentifier' => $mockAccessToken
 		))->shouldIgnoreMissing();
 		$this->inject($controller, 'accessTokenRepository', $mockAccessTokenRepository);
@@ -128,11 +128,11 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'roles' => array('Administrator'),
 			'party' => array('name' => 'John Doe')
 		);
-		$mockClientAccountMapper = m::mock('TYPO3\SingleSignOn\Server\Service\ClientAccountMapperInterface', array(
+		$mockClientAccountMapper = m::mock('Flowpack\SingleSignOn\Server\Service\ClientAccountMapperInterface', array(
 			'getAccountData' => $accountData
 		));
 		$this->inject($controller, 'clientAccountMapper', $mockClientAccountMapper);
-		$mockSingleSignOnSessionManager= m::mock('TYPO3\SingleSignOn\Server\Session\SsoSessionManager', array(
+		$mockSingleSignOnSessionManager= m::mock('Flowpack\SingleSignOn\Server\Session\SsoSessionManager', array(
 			'registerSsoClient' => NULL
 		));
 		$this->inject($controller, 'singleSignOnSessionManager', $mockSingleSignOnSessionManager);
@@ -157,7 +157,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function redeemActionWithInactiveSessionRespondsWith403() {
-		$controller = new \TYPO3\SingleSignOn\Server\Controller\AccessTokenController();
+		$controller = new \Flowpack\SingleSignOn\Server\Controller\AccessTokenController();
 
 		$response = new \TYPO3\Flow\Http\Response();
 		$this->inject($controller, 'response', $response);
@@ -166,17 +166,17 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		));
 		$this->inject($controller, 'request', $mockRequest);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
-		$mockSsoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
-		$mockAccessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
+		$mockSsoClient = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoClient');
+		$mockAccessToken = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getSessionId' => 'invalid-sessionid',
 			'getAccount' => $mockAccount,
 			'getSsoClient' => $mockSsoClient
 		));
-		$mockAccessTokenRepository = m::mock('TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
+		$mockAccessTokenRepository = m::mock('Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository', array(
 			'findByIdentifier' => $mockAccessToken
 		));
 		$this->inject($controller, 'accessTokenRepository', $mockAccessTokenRepository);
-		$this->inject($controller, 'clientAccountMapper', m::mock('TYPO3\SingleSignOn\Server\Service\ClientAccountMapperInterface'));
+		$this->inject($controller, 'clientAccountMapper', m::mock('Flowpack\SingleSignOn\Server\Service\ClientAccountMapperInterface'));
 		$mockSessionManager = m::mock('TYPO3\Flow\Session\SessionManagerInterface');
 		$mockSessionManager->shouldReceive('getSession')->with('invalid-sessionid')->andReturn(NULL);
 		$this->inject($controller, 'sessionManager', $mockSessionManager);

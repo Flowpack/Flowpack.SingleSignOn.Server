@@ -1,2 +1,2 @@
-TYPO3_SingleSignOn_Server_AccessToken_Storage:
+Flowpack_SingleSignOn_Server_AccessToken_Storage:
   backend: TYPO3\Flow\Cache\Backend\FileBackend

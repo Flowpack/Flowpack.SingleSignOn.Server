@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Server\Tests\Unit\Domain\Model;
+namespace Flowpack\SingleSignOn\Server\Tests\Unit\Domain\Model;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
@@ -21,12 +21,12 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$endpointUri = new Uri('http://ssoserver/sso/authentication?foo=bar&callbackUri=abc&clientIdentifier=client-01&signature=xyz&__csrfToken=123');
 		$request = \TYPO3\Flow\Http\Request::create($endpointUri);
 
-		$ssoServer = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoServer();
+		$ssoServer = new \Flowpack\SingleSignOn\Server\Domain\Model\SsoServer();
 
 		$rsaWalletService = m::mock('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');
 		$this->inject($ssoServer, 'rsaWalletService', $rsaWalletService);
 
-		$ssoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient', array(
+		$ssoClient = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoClient', array(
 			'getPublicKey' => 'client-public-key-fingerprint'
 		));
 
@@ -47,16 +47,16 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	public function buildCallbackRedirectUriAddsEncryptedAndSignedAccessTokenToQuery() {
 		$callbackUri = 'http://ssoclient/secured';
 
-		$ssoServer = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoServer();
+		$ssoServer = new \Flowpack\SingleSignOn\Server\Domain\Model\SsoServer();
 
 		$rsaWalletService = m::mock('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');
 		$this->inject($ssoServer, 'rsaWalletService', $rsaWalletService);
 
-		$ssoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient', array(
+		$ssoClient = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoClient', array(
 			'getPublicKey' => 'client-public-key-fingerprint',
 			'getServiceBaseUri' => 'http://ssoclient/sso/'
 		));
-		$accessToken = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\AccessToken', array(
+		$accessToken = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getIdentifier' => 'test-access-token'
 		));
 		$this->inject($ssoServer, 'keyPairUuid', 'server-public-key-fingerprint');
@@ -81,14 +81,14 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function createAccessTokenSetsSessionId() {
-		$ssoServer = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoServer();
+		$ssoServer = new \Flowpack\SingleSignOn\Server\Domain\Model\SsoServer();
 
 		$mockSession = m::mock('TYPO3\Flow\Session\FlowSession', array(
 			'getId' => 'session-id'
 		));
 		$this->inject($ssoServer, 'session', $mockSession);
 
-		$ssoClient = m::mock('TYPO3\SingleSignOn\Server\Domain\Model\SsoClient');
+		$ssoClient = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\SsoClient');
 		$account = m::mock('TYPO3\Flow\Security\Account');
 		$accessToken = $ssoServer->createAccessToken($ssoClient, $account);
 

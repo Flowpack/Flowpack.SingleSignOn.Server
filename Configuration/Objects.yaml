@@ -1,4 +1,4 @@
-TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository:
+Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository:
   properties:
     cache:
       object:
@@ -6,12 +6,12 @@ TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository:
         factoryMethodName: getCache
         arguments:
           1:
-            value: TYPO3_SingleSignOn_Server_AccessToken_Storage
+            value: Flowpack_SingleSignOn_Server_AccessToken_Storage
 
-TYPO3\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface:
-  className: TYPO3\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier
+Flowpack\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface:
+  className: Flowpack\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier
 
-TYPO3\SingleSignOn\Server\Log\SsoLoggerInterface:
+Flowpack\SingleSignOn\Server\Log\SsoLoggerInterface:
   scope: singleton
   factoryObjectName: TYPO3\Flow\Log\LoggerFactory
   arguments:
@@ -20,15 +20,15 @@ TYPO3\SingleSignOn\Server\Log\SsoLoggerInterface:
     2:
       value: 'TYPO3\Flow\Log\Logger'
     3:
-      setting: TYPO3.SingleSignOn.Server.log.backend
+      setting: Flowpack.SingleSignOn.Server.log.backend
     4:
-      setting: TYPO3.SingleSignOn.Server.log.backendOptions
+      setting: Flowpack.SingleSignOn.Server.log.backendOptions
 
-TYPO3\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier:
+Flowpack\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier:
   properties:
     requestEngine:
       object:
-        name: TYPO3\SingleSignOn\Server\Http\MultiCurlEngine
+        name: Flowpack\SingleSignOn\Server\Http\MultiCurlEngine
         properties:
           timeout:
             value: 10

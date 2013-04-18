@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Server\Tests\Unit\Service;
+namespace Flowpack\SingleSignOn\Server\Tests\Unit\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
@@ -19,12 +19,12 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getAccountDataMapsAccountInformation() {
-		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
+		$ssoClient = new \Flowpack\SingleSignOn\Server\Domain\Model\SsoClient();
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('jdoe');
 		$account->setRoles(array(new \TYPO3\Flow\Security\Policy\Role('Administrator')));
 
-		$mapper = new \TYPO3\SingleSignOn\Server\Service\SimpleClientAccountMapper();
+		$mapper = new \Flowpack\SingleSignOn\Server\Service\SimpleClientAccountMapper();
 		$data = $mapper->getAccountData($ssoClient, $account);
 
 		$this->assertEquals(array(
@@ -38,7 +38,7 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getAccountDataMapsPublicPartyProperties() {
-		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
+		$ssoClient = new \Flowpack\SingleSignOn\Server\Domain\Model\SsoClient();
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('jdoe');
 		$account->setRoles(array(new \TYPO3\Flow\Security\Policy\Role('Administrator')));
@@ -47,7 +47,7 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$party->setName(new \TYPO3\Party\Domain\Model\PersonName('', 'John', '', 'Doe'));
 		$account->setParty($party);
 
-		$mapper = new \TYPO3\SingleSignOn\Server\Service\SimpleClientAccountMapper();
+		$mapper = new \Flowpack\SingleSignOn\Server\Service\SimpleClientAccountMapper();
 		$data = $mapper->getAccountData($ssoClient, $account);
 
 		$this->assertArrayHasKey('party', $data);
@@ -60,7 +60,7 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function getAccountDataExposesTypeIfConfigured() {
-		$ssoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
+		$ssoClient = new \Flowpack\SingleSignOn\Server\Domain\Model\SsoClient();
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('jdoe');
 		$account->setRoles(array(new \TYPO3\Flow\Security\Policy\Role('Administrator')));
@@ -69,7 +69,7 @@ class SimpleClientAccountMapperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$party->setName(new \TYPO3\Party\Domain\Model\PersonName('', 'John', '', 'Doe'));
 		$account->setParty($party);
 
-		$mapper = new \TYPO3\SingleSignOn\Server\Service\SimpleClientAccountMapper();
+		$mapper = new \Flowpack\SingleSignOn\Server\Service\SimpleClientAccountMapper();
 		$mapper->setConfiguration(array(
 			'party' => array('_exposeType' => TRUE)
 		));

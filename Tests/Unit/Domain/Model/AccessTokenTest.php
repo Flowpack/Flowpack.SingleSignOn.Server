@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Server\Tests\Unit\Domain\Model;
+namespace Flowpack\SingleSignOn\Server\Tests\Unit\Domain\Model;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
@@ -15,7 +15,7 @@ class AccessTokenTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function constructorCreatesRandomIdentifier() {
-		$accessToken = new \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken();
+		$accessToken = new \Flowpack\SingleSignOn\Server\Domain\Model\AccessToken();
 		$this->assertNotEquals('', $accessToken->getIdentifier());
 	}
 

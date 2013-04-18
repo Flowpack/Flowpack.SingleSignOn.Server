@@ -2,7 +2,7 @@
   name: 'SSO authentication endpoint'
   uriPattern: 'authentication'
   defaults:
-    '@package':    'TYPO3.SingleSignOn.Server'
+    '@package':    'Flowpack.SingleSignOn.Server'
     '@controller': 'Endpoint'
     '@action':     'authenticate'
     '@format':     'html'
@@ -12,7 +12,7 @@
   name: 'SSO access token redemption'
   uriPattern: 'token/{accessToken}/redeem'
   defaults:
-    '@package':    'TYPO3.SingleSignOn.Server'
+    '@package':    'Flowpack.SingleSignOn.Server'
     '@controller': 'AccessToken'
     '@action':     'redeem'
     '@format':     'json'
@@ -22,7 +22,7 @@
   name: 'SSO session touch'
   uriPattern: 'session/{sessionId}/touch'
   defaults:
-    '@package':    'TYPO3.SingleSignOn.Server'
+    '@package':    'Flowpack.SingleSignOn.Server'
     '@controller': 'Session'
     '@action':     'touch'
     '@format':     'json'
@@ -31,7 +31,7 @@
   name: 'SSO session destroy'
   uriPattern: 'session/{sessionId}/destroy'
   defaults:
-    '@package':    'TYPO3.SingleSignOn.Server'
+    '@package':    'Flowpack.SingleSignOn.Server'
     '@controller': 'Session'
     '@action':     'destroy'
     '@format':     'json'

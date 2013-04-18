@@ -1,8 +1,8 @@
 #
-# Default Settings for TYPO3.SingleSignOn.Server
+# Default Settings for Flowpack.SingleSignOn.Server
 #
 
-TYPO3:
+Flowpack:
   SingleSignOn:
     Server:
       # Server configuration
@@ -24,21 +24,22 @@ TYPO3:
         # Enable logging of request signing (all signed requests)
         logRequestSigning: FALSE
 
+TYPO3:
   Flow:
     security:
       firewall:
         filters:
           -
-            patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern'
+            patternType: 'Flowpack\SingleSignOn\Client\Security\RequestPattern\ConjunctionPattern'
             patternValue:
               patterns:
                 -
                   patternType: ControllerObjectName
-                  patternValue: 'TYPO3\SingleSignOn\Server\Controller\(AccessToken|Session)Controller'
+                  patternValue: 'Flowpack\SingleSignOn\Server\Controller\(AccessToken|Session)Controller'
                 -
-                  patternType: 'TYPO3\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern'
+                  patternType: 'Flowpack\SingleSignOn\Client\Security\RequestPattern\SignedRequestPattern'
                   patternValue:
-                    resolverType: 'TYPO3\SingleSignOn\Server\Security\RequestPattern\SsoClientPublicKeyResolver'
+                    resolverType: 'Flowpack\SingleSignOn\Server\Security\RequestPattern\SsoClientPublicKeyResolver'
             interceptor: AccessDeny
 
     object:

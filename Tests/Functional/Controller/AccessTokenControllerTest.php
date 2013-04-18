@@ -1,8 +1,8 @@
 <?php
-namespace TYPO3\SingleSignOn\Server\Tests\Functional\Controller;
+namespace Flowpack\SingleSignOn\Server\Tests\Functional\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.SingleSignOn.Server".*
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
  *                                                                        *
  *                                                                        */
 
@@ -20,17 +20,17 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	protected static $testablePersistenceEnabled = TRUE;
 
 	/**
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoServer
+	 * @var \Flowpack\SingleSignOn\Server\Domain\Model\SsoServer
 	 */
 	protected $serverSsoServer;
 
 	/**
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient
+	 * @var \Flowpack\SingleSignOn\Server\Domain\Model\SsoClient
 	 */
 	protected $serverSsoClient;
 
 	/**
-	 * @var \TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository
+	 * @var \Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository
 	 */
 	protected $accessTokenRepository;
 
@@ -44,8 +44,8 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
-		$this->serverSsoServer = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Factory\SsoServerFactory')->create();
-		$this->accessTokenRepository = $this->objectManager->get('TYPO3\SingleSignOn\Server\Domain\Repository\AccessTokenRepository');
+		$this->serverSsoServer = $this->objectManager->get('Flowpack\SingleSignOn\Server\Domain\Factory\SsoServerFactory')->create();
+		$this->accessTokenRepository = $this->objectManager->get('Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository');
 		$this->rsaWalletService = $this->objectManager->get('TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface');
 	}
 
@@ -57,7 +57,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 		$this->setUpServerFixtures();
 
-		$requestSigner = $this->objectManager->get('TYPO3\SingleSignOn\Client\Security\RequestSigner');
+		$requestSigner = $this->objectManager->get('Flowpack\SingleSignOn\Client\Security\RequestSigner');
 
 		$account = new \TYPO3\Flow\Security\Account();
 		$account->setAccountIdentifier('testuser');
@@ -65,7 +65,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$account->setAuthenticationProviderName('SingleSignOn');
 		$this->persistenceManager->add($account);
 
-		$accessToken = new \TYPO3\SingleSignOn\Server\Domain\Model\AccessToken();
+		$accessToken = new \Flowpack\SingleSignOn\Server\Domain\Model\AccessToken();
 		$accessToken->setAccount($account);
 		$accessToken->setSessionId('test-sessionid');
 		$accessToken->setSsoClient($this->serverSsoClient);
@@ -96,7 +96,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 */
 	protected function setUpRoutes() {
 		$this->registerRoute('Redeem AccessToken', 'test/sso/token/{accessToken}/redeem', array(
-			'@package' => 'TYPO3.SingleSignOn.Server',
+			'@package' => 'Flowpack.SingleSignOn.Server',
 			'@subpackage' => '',
 			'@controller' => 'AccessToken',
 			'@action' => 'redeem',
@@ -110,7 +110,7 @@ class AccessTokenControllerTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 * Adds a SSO client to the repository.
 	 */
 	protected function setUpServerFixtures() {
-		$this->serverSsoClient = new \TYPO3\SingleSignOn\Server\Domain\Model\SsoClient();
+		$this->serverSsoClient = new \Flowpack\SingleSignOn\Server\Domain\Model\SsoClient();
 		$this->serverSsoClient->setBaseUri('client-01');
 		$this->serverSsoClient->setPublicKey('bb45dfda9f461c22cfdd6bbb0a252d8e');
 
