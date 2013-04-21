@@ -2,8 +2,23 @@
 	"name": "flowpack\/singlesignon-server",
 	"type": "typo3-flow-package",
 	"description": "TYPO3 SingleSignOn Server",
+	"license": ["MIT"],
+	"authors": [
+		{
+			"name": "Christopher Hlubek",
+			"email": "hlubek@networkteam.com",
+			"homepage": "http://www.networkteam.com",
+			"role": "Developer"
+		},
+		{
+			"name": "Robert Lemke",
+			"email": "rl@robertlemke.com",
+			"homepage": "http://robertlemke.com",
+			"role": "Developer"
+		}
+	],
 	"require": {
-		"typo3\/flow": "*",
+		"typo3\/flow": "~2.0",
 		"flowpack\/singlesignon-client": "*"
 	},
 	"require-dev": {
