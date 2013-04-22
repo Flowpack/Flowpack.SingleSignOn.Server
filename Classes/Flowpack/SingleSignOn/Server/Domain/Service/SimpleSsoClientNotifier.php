@@ -25,8 +25,7 @@ class SimpleSsoClientNotifier implements SsoClientNotifierInterface {
 	 * @param array $ssoClients
 	 * @return void
 	 */
-	public function destroySession(
-		SsoServer $ssoServer, $sessionId, array $ssoClients) {
+	public function destroySession(SsoServer $ssoServer, $sessionId, array $ssoClients) {
 		foreach ($ssoClients as $ssoClient) {
 			/** @var \Flowpack\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient */
 			$ssoClient->destroySession($ssoServer, $sessionId);

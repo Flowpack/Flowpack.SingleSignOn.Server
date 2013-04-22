@@ -9,7 +9,8 @@ Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository:
             value: Flowpack_SingleSignOn_Server_AccessToken_Storage
 
 Flowpack\SingleSignOn\Server\Domain\Service\SsoClientNotifierInterface:
-  className: Flowpack\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier
+  className: Flowpack\SingleSignOn\Server\Domain\Service\SimpleSsoClientNotifier
+#  className: Flowpack\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier
 
 Flowpack\SingleSignOn\Server\Log\SsoLoggerInterface:
   scope: singleton
@@ -29,6 +30,7 @@ Flowpack\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier:
     requestEngine:
       object:
         name: Flowpack\SingleSignOn\Server\Http\MultiCurlEngine
+        name: TYPO3\Flow\Http\Client\CurlEngine
         properties:
           timeout:
             value: 10
