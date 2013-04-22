@@ -7,13 +7,14 @@ namespace Flowpack\SingleSignOn\Server\Domain\Repository;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Persistence\Repository;
 
 /**
  * A repository for SSO Clients
  *
  * @Flow\Scope("singleton")
  */
-class SsoClientRepository extends \TYPO3\Flow\Persistence\Repository {
+class SsoClientRepository extends Repository {
 
 	/**
 	 * Find an SsoClient by identifier (baseUri)

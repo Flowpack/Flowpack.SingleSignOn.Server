@@ -1,12 +1,12 @@
 <?php
 namespace Flowpack\SingleSignOn\Server\Domain\Model;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Utility\Algorithms;
 
 /**
  * SSO Access Token
@@ -53,7 +53,7 @@ class AccessToken {
 	 * Generate an access token with a random string as identifier
 	 */
 	public function __construct() {
-		$this->identifier = \TYPO3\Flow\Utility\Algorithms::generateRandomString(24);
+		$this->identifier = Algorithms::generateRandomString(24);
 	}
 
 	/**

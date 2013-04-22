@@ -10,7 +10,7 @@ Flowpack:
         # The service base URI for this server
         serviceBaseUri: ''
         # Mandatory key pair uuid (fingerprint) for the SSO server
-        keyPairUuid: ''
+        keyPairFingerprint: ''
       log:
         backend: TYPO3\Flow\Log\Backend\FileBackend
         backendOptions:

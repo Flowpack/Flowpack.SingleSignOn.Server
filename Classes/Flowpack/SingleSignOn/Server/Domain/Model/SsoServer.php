@@ -1,10 +1,9 @@
 <?php
 namespace Flowpack\SingleSignOn\Server\Domain\Model;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Http\Uri;
@@ -26,7 +25,7 @@ class SsoServer {
 	 * The server key pair uuid
 	 * @var string
 	 */
-	protected $keyPairUuid;
+	protected $keyPairFingerprint;
 
 	/**
 	 * @Flow\Inject
@@ -78,14 +77,14 @@ class SsoServer {
 	 */
 	public function buildCallbackRedirectUri(SsoClient $ssoClient, AccessToken $accessToken, $callbackUri) {
 		$accessTokenCipher = $this->rsaWalletService->encryptWithPublicKey($accessToken->getIdentifier(), $ssoClient->getPublicKey());
-		$signature = $this->rsaWalletService->sign($accessTokenCipher, $this->keyPairUuid);
+		$signature = $this->rsaWalletService->sign($accessTokenCipher, $this->keyPairFingerprint);
 
 		$uri = new Uri($ssoClient->getServiceBaseUri() . 'authentication/callback');
 		$query = $uri->getQuery();
 		if ($query !== '') {
 			$query = $query . '&';
 		}
-		$query .= 'callbackUri=' . urlencode($callbackUri) . '&__typo3[singlesignon][accessToken]=' . urlencode(base64_encode($accessTokenCipher)) . '&__typo3[singlesignon][signature]=' . urlencode(base64_encode($signature));
+		$query .= 'callbackUri=' . urlencode($callbackUri) . '&__flowpack[singlesignon][accessToken]=' . urlencode(base64_encode($accessTokenCipher)) . '&__flowpack[singlesignon][signature]=' . urlencode(base64_encode($signature));
 		$uri->setQuery($query);
 		return $uri;
 	}
@@ -123,17 +122,17 @@ class SsoServer {
 	}
 
 	/**
-	 * @param string $keyPairUuid
+	 * @param string $keyPairFingerprint
 	 */
-	public function setKeyPairUuid($keyPairUuid) {
-		$this->keyPairUuid = $keyPairUuid;
+	public function setKeyPairFingerprint($keyPairFingerprint) {
+		$this->keyPairFingerprint = $keyPairFingerprint;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getKeyPairUuid() {
-		return $this->keyPairUuid;
+	public function getKeyPairFingerprint() {
+		return $this->keyPairFingerprint;
 	}
 
 	/**

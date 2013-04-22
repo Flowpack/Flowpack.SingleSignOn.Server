@@ -59,7 +59,7 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$accessToken = m::mock('Flowpack\SingleSignOn\Server\Domain\Model\AccessToken', array(
 			'getIdentifier' => 'test-access-token'
 		));
-		$this->inject($ssoServer, 'keyPairUuid', 'server-public-key-fingerprint');
+		$this->inject($ssoServer, 'keyPairFingerprint', 'server-public-key-fingerprint');
 
 		$rsaWalletService
 			->shouldReceive('encryptWithPublicKey')
@@ -74,7 +74,7 @@ class SsoServerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			->andReturn('access-token-signature');
 
 		$redirectUri = $ssoServer->buildCallbackRedirectUri($ssoClient, $accessToken, $callbackUri);
-		$this->assertContains('&__typo3[singlesignon][accessToken]=YWNjZXNzLXRva2VuLWNpcGhlcg%3D%3D&__typo3[singlesignon][signature]=YWNjZXNzLXRva2VuLXNpZ25hdHVyZQ%3D%3D', (string)$redirectUri);
+		$this->assertContains('&__flowpack[singlesignon][accessToken]=YWNjZXNzLXRva2VuLWNpcGhlcg%3D%3D&__flowpack[singlesignon][signature]=YWNjZXNzLXRva2VuLXNpZ25hdHVyZQ%3D%3D', (string)$redirectUri);
 	}
 
 	/**

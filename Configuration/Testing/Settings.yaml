@@ -3,7 +3,7 @@ Flowpack:
     Server:
       server:
         # Fixtures for functional tests
-        keyPairUuid: 'bb5abb57faa122cc031e3c904db3d751'
+        keyPairFingerprint: 'bb5abb57faa122cc031e3c904db3d751'
       log:
         backend: TYPO3\Flow\Log\Backend\NullBackend
 
@@ -11,7 +11,7 @@ Flowpack:
       client:
         # Fixtures for functional tests
         serviceBaseUri: 'http://ssoclient/sso'
-        keyPairUuid: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
+        keyPairFingerprint: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
       server:
         TestServer:
           # Fixtures for functional tests

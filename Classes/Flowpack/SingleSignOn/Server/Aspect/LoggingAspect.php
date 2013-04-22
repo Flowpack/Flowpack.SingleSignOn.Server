@@ -1,12 +1,12 @@
 <?php
 namespace Flowpack\SingleSignOn\Server\Aspect;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Client".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Aop\JoinPointInterface;
 
 /**
  * An aspect which logs SSO relevant actions
@@ -24,9 +24,10 @@ class LoggingAspect {
 
 	/**
 	 * @Flow\AfterReturning("setting(Flowpack.SingleSignOn.Server.log.logRequestSigning) && method(Flowpack\SingleSignOn\Client\Security\RequestSigner->signRequest())")
-	 * @param \TYPO3\Flow\Aop\JoinPointInterface $joinPoint The current joinpoint
+	 * @param JoinPointInterface $joinPoint The current joinpoint
+	 * @return void
 	 */
-	public function logRequestSigning(\TYPO3\Flow\Aop\JoinPointInterface $joinPoint) {
+	public function logRequestSigning(JoinPointInterface $joinPoint) {
 		$request = $joinPoint->getMethodArgument('request');
 		$this->ssoLogger->log('Signing request to "' . $request->getUri() . '"' . $joinPoint, LOG_DEBUG, array(
 			'identifier' => $joinPoint->getMethodArgument('identifier'),

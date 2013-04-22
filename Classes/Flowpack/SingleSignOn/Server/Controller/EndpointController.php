@@ -1,10 +1,9 @@
 <?php
 namespace Flowpack\SingleSignOn\Server\Controller;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
 use Flowpack\SingleSignOn\Server\Exception;

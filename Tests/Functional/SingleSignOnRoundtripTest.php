@@ -142,8 +142,8 @@ class SingleSignOnRoundtripTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->assertEquals('/test/secured', $callbackUri->getPath());
 		$callbackArguments = $callbackUri->getArguments();
 		$this->assertTrue(isset($callbackArguments['foo']), 'Callback URI should retain previous arguments');
-		$this->assertTrue(isset($callbackArguments['__typo3']['singlesignon']['accessToken']), 'Callback URI should have "__typo3[singlesignon][accessToken]" argument for access token');
-		$this->assertTrue(isset($callbackArguments['__typo3']['singlesignon']['signature']), 'Callback URI should have "__typo3[singlesignon][signature]" argument for server signature');
+		$this->assertTrue(isset($callbackArguments['__typo3']['singlesignon']['accessToken']), 'Callback URI should have "__flowpack[singlesignon][accessToken]" argument for access token');
+		$this->assertTrue(isset($callbackArguments['__typo3']['singlesignon']['signature']), 'Callback URI should have "__flowpack[singlesignon][signature]" argument for server signature');
 	}
 
 	/**

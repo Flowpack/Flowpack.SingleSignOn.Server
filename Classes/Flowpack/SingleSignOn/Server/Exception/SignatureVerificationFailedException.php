@@ -1,11 +1,9 @@
 <?php
 namespace Flowpack\SingleSignOn\Server\Exception;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
- *                                                                        *
- *                                                                        */
-
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
+ *                                                                               */
 
 /**
  * A signature verification failed exception

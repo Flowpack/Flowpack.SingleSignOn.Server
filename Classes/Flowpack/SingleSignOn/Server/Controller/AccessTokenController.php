@@ -1,13 +1,14 @@
 <?php
 namespace Flowpack\SingleSignOn\Server\Controller;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
+ *                                                                               */
 
+use Flowpack\SingleSignOn\Server\Domain\Model\AccessToken;
 use TYPO3\Flow\Annotations as Flow;
 use Flowpack\SingleSignOn\Server\Exception;
+use TYPO3\Flow\Mvc\Controller\ActionController;
 
 /**
  * Access token management controller
@@ -17,7 +18,7 @@ use Flowpack\SingleSignOn\Server\Exception;
  *
  * @Flow\Scope("singleton")
  */
-class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController {
+class AccessTokenController extends ActionController {
 
 	/**
 	 * @Flow\Inject
@@ -75,7 +76,7 @@ class AccessTokenController extends \TYPO3\Flow\Mvc\Controller\ActionController 
 		}
 
 		$accessTokenObject = $this->accessTokenRepository->findByIdentifier($accessToken);
-		if (!$accessTokenObject instanceof \Flowpack\SingleSignOn\Server\Domain\Model\AccessToken) {
+		if (!$accessTokenObject instanceof AccessToken) {
 			$this->response->setStatus(404);
 			$this->view->assign('value', array('message' => 'Invalid access token'));
 			return;

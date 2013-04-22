@@ -1,10 +1,9 @@
 <?php
 namespace Flowpack\SingleSignOn\Server\Domain\Model;
 
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server".*
- *                                                                        *
- *                                                                        */
+/*                                                                               *
+ * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
+ *                                                                               */
 
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
@@ -88,7 +87,7 @@ class SsoClient {
 		$request = \TYPO3\Flow\Http\Request::create($serviceUri, 'DELETE');
 		$request->setContent('');
 
-		return $this->requestSigner->signRequest($request, $ssoServer->getKeyPairUuid(), $ssoServer->getKeyPairUuid());
+		return $this->requestSigner->signRequest($request, $ssoServer->getKeyPairFingerprint(), $ssoServer->getKeyPairFingerprint());
 	}
 
 	/**
