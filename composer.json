@@ -19,11 +19,11 @@
 	],
 	"require": {
 		"typo3\/flow": "~2.0",
-		"flowpack\/singlesignon-client": "*"
+		"flowpack\/singlesignon-client": "dev-master"
 	},
 	"require-dev": {
 		"mockery/mockery": "0.7.*"
-    },
+	},
 	"autoload": {
 		"psr-0": {
 			"Flowpack\\SingleSignOn\\Server": "Classes"
