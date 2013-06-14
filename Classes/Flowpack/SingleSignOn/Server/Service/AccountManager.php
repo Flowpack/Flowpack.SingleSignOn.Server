@@ -26,6 +26,7 @@ class AccountManager {
 
 	/**
 	 * @Flow\Inject
+	 * @Flow\Transient
 	 * @var \TYPO3\Flow\Session\SessionInterface
 	 */
 	protected $session;
