@@ -4,6 +4,7 @@ Flowpack:
       server:
         # Fixtures for functional tests
         keyPairFingerprint: 'bb5abb57faa122cc031e3c904db3d751'
+        serviceBaseUri: 'http://ssoserver/test/sso'
       log:
         backend: TYPO3\Flow\Log\Backend\NullBackend
 
@@ -11,11 +12,11 @@ Flowpack:
       client:
         # Fixtures for functional tests
         serviceBaseUri: 'http://ssoclient/sso'
-        keyPairFingerprint: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
+        publicKeyFingerprint: 'bb45dfda9f461c22cfdd6bbb0a252d8e'
       server:
         TestServer:
           # Fixtures for functional tests
-          publicKeyUuid: 'bb5abb57faa122cc031e3c904db3d751'
+          publicKeyFingerprint: 'bb5abb57faa122cc031e3c904db3d751'
           serviceBaseUri: 'http://ssoserver/test/sso'
 
 TYPO3:
