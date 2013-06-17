@@ -45,7 +45,7 @@ This is a simple roundtrip for access to a secured resource on an instance witho
         :align: center
 
 1. A user accesses a secured resource on an instance
-2. Since no account is authenticated the user is redirected to a configured server
+2. Since no account is authenticated on the instance the user is redirected to a configured server
 3. The user will authenticate on the server through a configured authentication provider (e.g. username / password)
 4. The server redirects back to the instance and passes an encrypted access token
 5. The instance checks the access token and does a server-side request to redeem the token on the server,
