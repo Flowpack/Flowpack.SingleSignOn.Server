@@ -186,7 +186,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('Index', 'Projectname.tex', u'Project name Documentation',
+  ('Index', 'Projectname.tex', u'Flowpack Single sign-on Server Documentation',
    u'Author name(s)', 'manual'),
 ]
 
@@ -216,8 +216,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('Index', 'projectname', u'Project name Documentation',
-     [u'Author name(s)'], 1)
+    ('Index', 'projectname', u'Flowpack Single sign-on Server Documentation',
+     [u'Christopher Hlubek, Robert Lemke'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -230,8 +230,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('Index', 'Projectname', u'Project name Documentation',
-   u'Author name(s)', 'Projectname', 'One line description of project.',
+  ('Index', 'Projectname', u'Flowpack Single sign-on Server Documentation',
+   u'Christopher Hlubek, Robert Lemke', 'Projectname', 'A Single sign-on solution (client / server) for TYPO3 Flow.',
    'Miscellaneous'),
 ]
 
@@ -248,10 +248,10 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title     = u'Project name'
-epub_author    = u'Author name(s)'
-epub_publisher = u'Author name(s)'
-epub_copyright = u'2012, Author name(s)'
+epub_title     = u'Flowpack Single sign-on'
+epub_author    = u'Christopher Hlubek, Robert Lemke'
+epub_publisher = u'Christopher Hlubek, Robert Lemke'
+epub_copyright = u'2012-2013, Christopher Hlubek, Robert Lemke'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

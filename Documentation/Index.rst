@@ -1,4 +1,4 @@
-Flowpack Single Sign-on Server Documentation
+Flowpack Single sign-on Server Documentation
 --------------------------------------------
 
 *This version of the documentation has been rendered at:* |today|
@@ -7,7 +7,7 @@ Flowpack Single Sign-on Server Documentation
 Overview
 ======================================
 
-The Flowpack single sign-on packages provide a distributed authentication and authorization solution for
+The Flowpack Single sign-on packages provide a distributed authentication and authorization solution for
 TYPO3 Flow applications. It is based on the Flow security framework and makes no special assumptions about the
 actual authentication method, source of account data and the authorization data that is exchanged between the systems.
 
