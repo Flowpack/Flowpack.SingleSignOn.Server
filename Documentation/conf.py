@@ -38,7 +38,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'Index'
+master_doc = 'index'
 
 # General information about the project.
 project   = u'Project name. Specify this in Settings.yml'
@@ -186,7 +186,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('Index', 'Projectname.tex', u'Flowpack Single sign-on Server Documentation',
+  ('index', 'Projectname.tex', u'Flowpack Single sign-on Server Documentation',
    u'Author name(s)', 'manual'),
 ]
 
@@ -216,7 +216,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('Index', 'projectname', u'Flowpack Single sign-on Server Documentation',
+    ('index', 'projectname', u'Flowpack Single sign-on Server Documentation',
      [u'Christopher Hlubek, Robert Lemke'], 1)
 ]
 
@@ -230,7 +230,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('Index', 'Projectname', u'Flowpack Single sign-on Server Documentation',
+  ('index', 'Projectname', u'Flowpack Single sign-on Server Documentation',
    u'Christopher Hlubek, Robert Lemke', 'Projectname', 'A Single sign-on solution (client / server) for TYPO3 Flow.',
    'Miscellaneous'),
 ]
