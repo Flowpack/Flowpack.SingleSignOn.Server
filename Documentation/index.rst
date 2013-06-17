@@ -74,7 +74,9 @@ also provide the demo in a Vagrant_ box (a tool for a development environment in
 .. WARNING:: Do not use the *Flowpack.SingleSignOn.DemoServer* package in production! It contains code that is used for
    testing and allows creation of users and session management over an unsecured HTTP API.
 
-User accounts for testing:
+.. _demo credentials:
+
+Demo credentials for testing:
 
 ======== ======== =============
 Username Password Role
@@ -211,7 +213,213 @@ After setting up everyhting you should be able to access http://ssodemoserver.lo
 Demo walkthrough
 ================
 
+You could test the following scenarios:
 
+* Go to demo instance, request *secure action*: A login form on the server will be displayed. After login with one of
+  the `demo credentials`_ you should be redirected back to the secure action and be authenticated on the server and instance.
+* Authenticate on server, request *secure action* on instance: No login form is displayed if an authenticated session
+  already exists and the session is transferred to the instance using redirects and server-side requests.
+* Authenticate on server and instance, logout from server: When going to the instance again you should see, that the
+  session was automatically invalidated using a server-side request.
+* Authenticate on server and instance, logout on instance: When going to the server you should see, that the
+  session was automatically invalidated using a server-side request.
+
+*About the demo server*
+
+The demo server distribution has a package `Flowpack.SingleSignOn.DemoServer` for custom domain models and extensions
+to the single sign-on. This package also implements a UI for demonstration and requires the `Flowpack.SingleSignOn.Server`
+package which does all the heavy-lifting for the single sign-on.
+
+The `User` entity of the DemoServer is a simple `AbstractParty` implementation::
+
+    /**
+     * @Flow\Entity
+     */
+    class User extends AbstractParty {
+
+    	/**
+    	 * @var string
+    	 */
+    	protected $firstname = '';
+
+    	/**
+    	 * @var string
+    	 */
+    	protected $lastname = '';
+
+    	/**
+    	 * @var string
+    	 */
+    	protected $company = '';
+
+    	...
+    }
+
+Basically any `AbstractParty` implementation will work for the single sign-on.
+
+The `LoginController` in the DemoServer package handles the actual authentication (on redirection from an instance or directly on the server) against a configured authentication
+provider and is the same as for any other Flow application::
+
+    class LoginController extends AbstractAuthenticationController {
+
+        public function indexAction() {
+        }
+
+        protected function onAuthenticationSuccess(\TYPO3\Flow\Mvc\ActionRequest $originalRequest = NULL) {
+            if ($originalRequest !== NULL) {
+                $this->redirectToRequest($originalRequest);
+            }
+
+            $this->addFlashMessage('No original SSO request present. Account authenticated on server.', 'Authentication successful', \TYPO3\Flow\Error\Message::SEVERITY_OK);
+            $this->redirect('index', 'Standard');
+        }
+
+        public function logoutAction() {
+            parent::logoutAction();
+
+            $this->addFlashMessage('You have been logged out');
+            $this->redirect('index', 'Standard');
+        }
+
+    }
+
+In the `onAuthenticationSuccess` method a check is made for an original request (which is passed from an entry point) and
+a flash message is displayed otherwise. The magic happens because the client package redirects the user to an *SSO
+authentication endpoint* where the authentication is started and a configured entry point redirects the user to the
+`LoginController` if no account is authenticated.
+
+The configuration of the entry point is done like in any other Flow application::
+
+    TYPO3:
+      Flow:
+        security:
+          authentication:
+            providers:
+              DefaultProvider:
+                provider: PersistedUsernamePasswordProvider
+                entryPoint: WebRedirect
+                entryPointOptions:
+                  uri: 'login'
+
+See the `TYPO3 Flow security framework documentation`_ for more information about authentication providers and entry points.
+
+The only other relevant configuration contains the server key pair fingerprint and service base URI::
+
+    Flowpack:
+      SingleSignOn:
+        Server:
+          server:
+            keyPairFingerprint: bb5abb57faa122cc031e3c904db3d751
+            serviceBaseUri: 'http://ssodemoserver.local/sso/'
+
+The REST services of the server package have to be registered by mounting the routes in the global `Routes.yaml`::
+
+    -
+      name: 'SingleSignOn'
+      uriPattern: 'sso/<SingleSignOnSubroutes>'
+      subRoutes:
+        SingleSignOnSubroutes:
+          package: Flowpack.SingleSignOn.Server
+
+This route also defines the *service base URI* of the server, which is a mandatory configuration for all SSO clients.
+
+For the demo setup we have provided a convenient setup command for the key creation and SSO client registration. To
+create a new key pair the `ssokey:generatekeypair` command can be used.
+
+The DemoServer package contains some special controllers for demonstration purposes (`SessionsController` and
+`ConfigurationController`) which are not needed for the single sign-on.
+
+*About the demo instance*
+
+The demo instance distribution also has a package `Flowpack.SingleSignOn.DemoInstance` which implements a demo UI
+and configures the single sign-on as a Flow authentication provider. The *secure action* is implemented by restricting
+access to a controller action in the `Policy.yaml` just like in every other Flow application.
+
+The user entity on the instance is mostly a copy of the server model but is not meant for persistance but transient
+usage::
+
+    /**
+     * @Flow\Entity
+     */
+    class User extends \TYPO3\Party\Domain\Model\AbstractParty {
+
+    	/**
+    	 * The username of the user
+    	 *
+    	 * @var string
+    	 */
+    	protected $username;
+
+    	/**
+    	 * @var string
+    	 */
+    	protected $firstname = '';
+
+    	/**
+    	 * @var string
+    	 */
+    	protected $lastname = '';
+
+    	/**
+    	 * @var string
+    	 */
+    	protected $company = '';
+
+    	/**
+    	 * @var string
+    	 */
+    	protected $role = '';
+
+    	...
+    }
+
+The single sign-on does not require a transient party model, but the `SimpleGlobalAccountMapper` that comes with
+the `Flowpack.SingleSignOn.Client` package does always create a fresh account instance and maps the properties of the
+server party to a configured type on the instance (see setting `Flowpack.SingleSignOn.Client.accountMapper.typeMapping`).
+
+The instance uses the single sign-on by configuring the authentication provider `SingleSignOnProvider`::
+
+    TYPO3:
+      Flow:
+        security:
+          authentication:
+            providers:
+              SingleSignOnProvider:
+                provider: 'Flowpack\SingleSignOn\Client\Security\SingleSignOnProvider'
+                providerOptions:
+                  server: DemoServer
+                  globalSessionTouchInterval: 5
+                entryPoint: 'Flowpack\SingleSignOn\Client\Security\EntryPoint\SingleSignOnRedirect'
+                entryPointOptions:
+                  server: DemoServer
+
+The provier options refer to a server by an identifier. This identifier is configured in the `Flowpack.SingleSignOn.Client`
+settings::
+
+    Flowpack:
+      SingleSignOn:
+        Client:
+          client:
+            # Service base URI as identifier of the DemoInstance client
+            serviceBaseUri: ''
+            # Key pair fingerprint of the DemoInstance client
+            publicKeyFingerprint: ''
+
+          server:
+            DemoServer:
+              # Service base URI of the SSO server
+              serviceBaseUri: ''
+              # Public key fingerprint of a SSO server
+              publicKeyFingerprint: ''
+
+          accountMapper:
+            typeMapping:
+              # Map a user type from the server to one of the instance, more complex scenarios
+              # need a specialized account mapper implementation (see GlobalAccountMapperInterface)
+              'Flowpack\SingleSignOn\DemoServer\Domain\Model\User': 'Flowpack\SingleSignOn\DemoInstance\Domain\Model\User'
+
+
+.. _TYPO3 Flow security framework documentation: http://docs.typo3.org/flow/TYPO3FlowDocumentation/TheDefinitiveGuide/PartIII/Security.html
 
 ======================================
 Usage
