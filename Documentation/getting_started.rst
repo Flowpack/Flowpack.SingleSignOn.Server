@@ -31,18 +31,22 @@ user2    password User
 Setting up the Vagrant demo
 ---------------------------
 
-First clone the DemoVagrant repository that contains the Vagrant box setup::
+First clone the DemoVagrant repository that contains the Vagrant box setup:
 
-    git clone https://github.com/Flowpack/Flowpack.SingleSignOn.Demo-Vagrant.git DemoVagrant
-    cd DemoVagrant
+.. code-block:: bash
+
+    $ git clone https://github.com/Flowpack/Flowpack.SingleSignOn.Demo-Vagrant.git DemoVagrant
+    $ cd DemoVagrant
 
 Then install Vagrant_ for your operating system, install the `librarian` gem for downloading bundled cookbooks and start
-the vagrant box::
+the vagrant box:
 
-    gem install librarian
-    librarian-chef install
+.. code-block:: bash
+
+    $ gem install librarian
+    $ librarian-chef install
       ...
-    vagrant up
+    $ vagrant up
 
 The virtual machine should now boot and start to provision the demo setup (this can take a while).
 
@@ -65,21 +69,23 @@ Manually setting up the demo server and instance
 The demo setup consists of a demo server and a demo instance bundled in two TYPO3 Flow distributions. You should follow
 the steps in the `TYPO3 Flow Quickstart`_ for a general setup for Flow development if not yet done.
 
-Each distribution should be cloned into a separate directory::
+Each distribution should be cloned into a separate directory:
 
-    mkdir singlesignon-demo
-    cd singlesignon-demo
+.. code-block:: bash
 
-
+    $ mkdir singlesignon-demo
+    $ cd singlesignon-demo
 
 Setting up the server
 ^^^^^^^^^^^^^^^^^^^^^
 
-Clone the repository, install dependencies with Composer::
+Clone the repository, install dependencies with Composer:
 
-    git clone https://github.com/Flowpack/Flowpack.SingleSignOn.DemoServer-Distribution.git DemoServer
-    cd DemoServer
-    path/to/composer.phar install --dev
+.. code-block:: bash
+
+    $ git clone https://github.com/Flowpack/Flowpack.SingleSignOn.DemoServer-Distribution.git DemoServer
+    $ cd DemoServer
+    $ path/to/composer.phar install --dev
 
 Create a `Configuration/Settings.yaml`:
 
@@ -107,20 +113,23 @@ Create a `Configuration/Settings.yaml`:
             -
               serviceBaseUri: 'http://ssodemoinstance.local/sso/'
 
-Run migrations and demo setup::
+Run migrations and demo setup:
 
-    ./flow doctrine:migrate
-    ./flow flowpack.singlesignon.demoserver:demo:setup
+.. code-block:: bash
 
+    $ ./flow doctrine:migrate
+    $ ./flow flowpack.singlesignon.demoserver:demo:setup
 
 Setting up the instance
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Clone the repository, install dependencies with Composer::
+Clone the repository, install dependencies with Composer:
 
-    git clone https://github.com/Flowpack/Flowpack.SingleSignOn.DemoInstance-Distribution.git DemoInstance
-    cd DemoInstance
-    path/to/composer.phar install --dev
+.. code-block:: bash
+
+    $ git clone https://github.com/Flowpack/Flowpack.SingleSignOn.DemoInstance-Distribution.git DemoInstance
+    $ cd DemoInstance
+    $ path/to/composer.phar install --dev
 
 Create a `Configuration/Settings.yaml`:
 
@@ -150,10 +159,12 @@ Create a `Configuration/Settings.yaml`:
           demoServerUri: 'http://ssodemoserver.local/'
 
 
-Run migrations and demo setup::
+Run migrations and demo setup:
 
-    ./flow doctrine:migrate
-    ./flow flowpack.singlesignon.demoinstance:demo:setup
+.. code-block:: bash
+
+    $ ./flow doctrine:migrate
+    $ ./flow flowpack.singlesignon.demoinstance:demo:setup
 
 -----
 
@@ -183,6 +194,8 @@ You could test the following scenarios:
 
 .. index::
    single: Demo; Server
+
+.. _About the demo server:
 
 About the demo server
 ^^^^^^^^^^^^^^^^^^^^^
