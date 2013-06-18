@@ -372,3 +372,10 @@ if 1 and "TYPO3 specific":
 #
 #=================================================
 
+
+# Configure PhpLexer pygment to inline PHP
+
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+
+lexers['php'] = PhpLexer(startinline=True)

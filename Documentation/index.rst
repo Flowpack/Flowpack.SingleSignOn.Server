@@ -130,7 +130,9 @@ Clone the repository, install dependencies with Composer::
     cd DemoServer
     path/to/composer.phar install --dev
 
-Create a `Configuration/Settings.yaml`::
+Create a `Configuration/Settings.yaml`:
+
+.. code-block:: yaml
 
     TYPO3:
       Flow:
@@ -170,7 +172,9 @@ Clone the repository, install dependencies with Composer::
     cd DemoInstance
     path/to/composer.phar install --dev
 
-Create a `Configuration/Settings.yaml`::
+Create a `Configuration/Settings.yaml`:
+
+.. code-block:: yaml
 
     TYPO3:
       Flow:
@@ -230,7 +234,9 @@ The demo server distribution has a package `Flowpack.SingleSignOn.DemoServer` fo
 to the single sign-on. This package also implements a UI for demonstration and requires the `Flowpack.SingleSignOn.Server`
 package which does all the heavy-lifting for the single sign-on.
 
-The `User` entity of the DemoServer is a simple `AbstractParty` implementation::
+The `User` entity of the DemoServer is a simple `AbstractParty` implementation:
+
+.. code-block:: php
 
     /**
      * @Flow\Entity
@@ -258,7 +264,9 @@ The `User` entity of the DemoServer is a simple `AbstractParty` implementation::
 Basically any `AbstractParty` implementation will work for the single sign-on.
 
 The `LoginController` in the DemoServer package handles the actual authentication (on redirection from an instance or directly on the server) against a configured authentication
-provider and is the same as for any other Flow application::
+provider and is the same as for any other Flow application:
+
+.. code-block:: php
 
     class LoginController extends AbstractAuthenticationController {
 
@@ -288,7 +296,9 @@ a flash message is displayed otherwise. The magic happens because the client pac
 authentication endpoint* where the authentication is started and a configured entry point redirects the user to the
 `LoginController` if no account is authenticated.
 
-The configuration of the entry point is done like in any other Flow application::
+The configuration of the entry point is done like in any other Flow application:
+
+.. code-block:: yaml
 
     TYPO3:
       Flow:
@@ -303,7 +313,9 @@ The configuration of the entry point is done like in any other Flow application:
 
 See the `TYPO3 Flow security framework documentation`_ for more information about authentication providers and entry points.
 
-The only other relevant configuration contains the server key pair fingerprint and service base URI::
+The only other relevant configuration contains the server key pair fingerprint and service base URI:
+
+.. code-block:: yaml
 
     Flowpack:
       SingleSignOn:
@@ -312,7 +324,10 @@ The only other relevant configuration contains the server key pair fingerprint a
             keyPairFingerprint: bb5abb57faa122cc031e3c904db3d751
             serviceBaseUri: 'http://ssodemoserver.local/sso/'
 
-The REST services of the server package have to be registered by mounting the routes in the global `Routes.yaml`::
+The REST services of the server package have to be registered by mounting the routes in the global `Routes.yaml`:
+
+
+.. code-block:: yaml
 
     -
       name: 'SingleSignOn'
@@ -336,7 +351,9 @@ and configures the single sign-on as a Flow authentication provider. The *secure
 access to a controller action in the `Policy.yaml` just like in every other Flow application.
 
 The user entity on the instance is mostly a copy of the server model but is not meant for persistance but transient
-usage::
+usage:
+
+.. code-block:: php
 
     /**
      * @Flow\Entity
@@ -377,7 +394,9 @@ The single sign-on does not require a transient party model, but the `SimpleGlob
 the `Flowpack.SingleSignOn.Client` package does always create a fresh account instance and maps the properties of the
 server party to a configured type on the instance (see setting `Flowpack.SingleSignOn.Client.accountMapper.typeMapping`).
 
-The instance uses the single sign-on by configuring the authentication provider `SingleSignOnProvider`::
+The instance uses the single sign-on by configuring the authentication provider `SingleSignOnProvider` in its `Settings.yaml`:
+
+.. code-block:: yaml
 
     TYPO3:
       Flow:
@@ -393,24 +412,28 @@ The instance uses the single sign-on by configuring the authentication provider 
                 entryPointOptions:
                   server: DemoServer
 
-The provier options refer to a server by an identifier. This identifier is configured in the `Flowpack.SingleSignOn.Client`
-settings::
+This configures an authentication provider with name `SingleSignOnProvider` to use the `SingleSignOnProvider` from the
+single sign-on client package. It's important to also configure the entry point when using the single sign-on provider.
+The entry point will redirect the user to the server if no session is authenticated locally and handles the parameter
+passing.
+
+The provider and entry point options refer to a server by an identifier `DemoServer`. This identifier is configured in the
+`Flowpack.SingleSignOn.Client` settings:
+
+.. code-block:: yaml
+    :emphasize-lines: 9
 
     Flowpack:
       SingleSignOn:
         Client:
           client:
-            # Service base URI as identifier of the DemoInstance client
-            serviceBaseUri: ''
-            # Key pair fingerprint of the DemoInstance client
-            publicKeyFingerprint: ''
+            serviceBaseUri: http://ssodemoinstance.dev/sso
+            publicKeyFingerprint: bb45dfda9f461c22cfdd6bbb0a252d8e
 
           server:
             DemoServer:
-              # Service base URI of the SSO server
-              serviceBaseUri: ''
-              # Public key fingerprint of a SSO server
-              publicKeyFingerprint: ''
+              serviceBaseUri: http://ssodemoserver.dev/sso/
+              publicKeyFingerprint: bb5abb57faa122cc031e3c904db3d751
 
           accountMapper:
             typeMapping:
@@ -418,6 +441,9 @@ settings::
               # need a specialized account mapper implementation (see GlobalAccountMapperInterface)
               'Flowpack\SingleSignOn\DemoServer\Domain\Model\User': 'Flowpack\SingleSignOn\DemoInstance\Domain\Model\User'
 
+Configuring the authentication provider and entry point tells the Flow security framework to use the
+single sign-on for authentication. The single sign-on client needs some more settings for the client / server public key
+fingerprints and the service base URIs to use for redirecting back and forth during authentication.
 
 .. _TYPO3 Flow security framework documentation: http://docs.typo3.org/flow/TYPO3FlowDocumentation/TheDefinitiveGuide/PartIII/Security.html
 
