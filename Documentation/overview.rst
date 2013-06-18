@@ -51,6 +51,8 @@ allows for (signed) server-side requests initiated by the client or the server. 
 access to the single sign-on only to explicitly registered clients. The clients are persisted as entities inside a
 configured database. A management interface for the clients can be implemented in a custom package.
 
+See :doc:`sso-server` for more information about implementing a custom server application.
+
 Instance
 ^^^^^^^^
 

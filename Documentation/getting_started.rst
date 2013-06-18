@@ -1,14 +1,17 @@
 Getting started
 ===============
 
-Before building a custom single sign-on server and integration of the client in existing Flow applications we recommend
-to have a look at a working demo setup.
+.. tip:: Before building a custom single sign-on server and integration of the client in existing Flow applications we
+   recommend to have a look at a the demo setup.
 
 We provide TYPO3 Flow demo applications for both the server and an exemplary instance. To make the setup easier we
 also provide the demo as a Vagrant_ box (a tool for a development environment in virtual machines).
 
 .. warning:: Do not use the *Flowpack.SingleSignOn.DemoServer* package in production! It contains code that is meant for
    testing and allows creation of users and session management over an unsecured HTTP API.
+
+.. index::
+   single: Demo; Credentials
 
 .. _demo credentials:
 
@@ -21,6 +24,9 @@ admin    password Administrator
 user1    password User
 user2    password User
 ======== ======== =============
+
+.. index::
+   pair: Demo; Vagrant
 
 Setting up the Vagrant demo
 ---------------------------
@@ -49,6 +55,9 @@ Browse to http://ssodemoserver.vagrant/ and you should see the demo server front
 http://ssodemoserver2.vagrant/ for running multi-instance acceptance tests.
 
 .. _Vagrant: http://www.vagrantup.com/
+
+.. index::
+   single: Demo; Setup
 
 Manually setting up the demo server and instance
 ------------------------------------------------
@@ -155,6 +164,9 @@ After setting up everything you should be able to access http://ssodemoserver.lo
 
 .. _TYPO3 Flow Quickstart: http://docs.typo3.org/flow/TYPO3FlowDocumentation/Quickstart/
 
+.. index::
+   single: Demo; Walkthrough
+
 Demo walkthrough
 ----------------
 
@@ -168,6 +180,9 @@ You could test the following scenarios:
   session was automatically invalidated using a server-side request.
 * Authenticate on server and instance, logout on instance: When going to the server you should see, that the
   session was automatically invalidated using a server-side request.
+
+.. index::
+   single: Demo; Server
 
 About the demo server
 ^^^^^^^^^^^^^^^^^^^^^
@@ -284,6 +299,9 @@ create a new key pair the `ssokey:generatekeypair` command can be used.
 
 The DemoServer package contains some special controllers for demonstration purposes (`SessionsController` and
 `ConfigurationController`) which are not needed for the single sign-on.
+
+.. index::
+   single: Demo; Instance
 
 About the demo instance
 ^^^^^^^^^^^^^^^^^^^^^^^
