@@ -16,7 +16,7 @@ use TYPO3\Flow\Utility\Algorithms;
 class AccessToken {
 
 	/**
-	 * Default validity of an access token until it's considered expired
+	 * Default validity of an access token until it's considered expired (in seconds)
 	 */
 	const DEFAULT_VALIDITY_TIME = 60;
 
@@ -53,7 +53,7 @@ class AccessToken {
 	 * Generate an access token with a random string as identifier
 	 */
 	public function __construct() {
-		$this->identifier = Algorithms::generateRandomString(24);
+		$this->identifier = Algorithms::generateRandomString(32);
 	}
 
 	/**

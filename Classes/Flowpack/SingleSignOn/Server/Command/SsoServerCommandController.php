@@ -42,7 +42,7 @@ class SsoServerCommandController extends CommandController {
 		try {
 			$this->rsaWalletService->getPublicKey($publicKey);
 		} catch(\TYPO3\Flow\Security\Exception\InvalidKeyPairIdException $exception) {
-			$this->outputLine('Invalid public key fingerprint: ' . $publicKey);
+			$this->outputLine('Invalid or unknown public key fingerprint: ' . $publicKey . '. Make sure to import the key before adding the client.');
 		}
 
 		$ssoClient = new SsoClient();

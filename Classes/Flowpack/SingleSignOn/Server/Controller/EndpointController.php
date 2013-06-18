@@ -85,6 +85,10 @@ class EndpointController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			// TODO Prevent loops
 		$this->authenticationManager->authenticate();
 
+		if (!$this->authenticationManager->isAuthenticated()) {
+			throw new Exception('Expected an authenticated token after call to authenticate()', 1371568585);
+		}
+
 		$account = $this->accountManager->getClientAccount();
 
 		$accessToken = $ssoServer->createAccessToken($ssoClient, $account);

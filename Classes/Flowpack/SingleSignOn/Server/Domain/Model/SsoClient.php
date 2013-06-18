@@ -108,7 +108,7 @@ class SsoClient {
 	/**
 	 * Get the Sso client's public key
 	 *
-	 * @return string The Sso client's public key
+	 * @return string The public key fingerprint
 	 */
 	public function getPublicKey() {
 		return $this->publicKey;
@@ -117,7 +117,7 @@ class SsoClient {
 	/**
 	 * Sets this Sso client's public key
 	 *
-	 * @param string $publicKey The Sso client's public key
+	 * @param string $publicKey The public key fingerprint
 	 * @return void
 	 */
 	public function setPublicKey($publicKey) {
