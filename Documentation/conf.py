@@ -41,8 +41,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project   = u'Project name. Specify this in Settings.yml'
-copyright = u'Copyright note. Specify this in Settings.yml'
+project   = u'Flowpack SingleSignOn'
+copyright = u'2012-2013 Christopher Hlubek, Robert Lemke'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
