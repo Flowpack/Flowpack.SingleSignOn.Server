@@ -18,6 +18,12 @@ use TYPO3\Flow\Annotations as Flow;
 class SimpleSsoClientNotifier implements SsoClientNotifierInterface {
 
 	/**
+	 * @Flow\Inject
+	 * @var \Flowpack\SingleSignOn\Server\Log\SsoLoggerInterface
+	 */
+	protected $ssoLogger;
+
+	/**
 	 * Destroy SSO client sessions by iterating through all clients
 	 *
 	 * @param SsoServer $ssoServer
@@ -29,6 +35,7 @@ class SimpleSsoClientNotifier implements SsoClientNotifierInterface {
 		foreach ($ssoClients as $ssoClient) {
 			/** @var \Flowpack\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient */
 			$ssoClient->destroySession($ssoServer, $sessionId);
+			$this->ssoLogger->log('Destroyed session "' . $sessionId . '" on client ' . $ssoClient->getServiceBaseUri(), LOG_INFO);
 		}
 	}
 
