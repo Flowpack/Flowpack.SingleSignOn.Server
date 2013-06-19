@@ -89,30 +89,30 @@ The `Flowpack.SingleSignOn.Server` package provides the following default config
             # Enable logging of request signing (all signed requests)
             logRequestSigning: FALSE
 
-+---------------------------+------------------------------------------+-----------+---------+--------------+
-+ Option                    + Description                              + Mandatory + Type    + Default      +
-+===========================+==========================================+===========+=========+==============+
-+ server.serviceBaseUri     + The service base URI for this server     + Yes       + string  +              +
-+---------------------------+------------------------------------------+-----------+---------+--------------+
-+ server.keyPairFingerprint + Key pair fingerprint for the server      + Yes       + string  +              +
-+---------------------------+------------------------------------------+-----------+---------+--------------+
-+ log.backend               + Log backend type for the single sign-on  + No        + string  + FileBackend  +
-+                           + logger                                   +           +         +              +
-+---------------------------+------------------------------------------+-----------+---------+--------------+
-+ log.backendOptions        + Log backend options for the single       + No        + array   + see Settings +
-+                           + sign-on logger                           +           +         +              +
-+---------------------------+------------------------------------------+-----------+---------+--------------+
-+ log.logRequestSigning     + Controls logging of signed requests via  + No        + boolean + FALSE        +
-+                           + an aspect (for debugging)                +           +         +              +
-+---------------------------+------------------------------------------+-----------+---------+--------------+
++-----------------------------+------------------------------------------+-----------+---------+--------------+
++ Option                      + Description                              + Mandatory + Type    + Default      +
++=============================+==========================================+===========+=========+==============+
++ server.serviceBaseUri       + The service base URI for this server     + Yes       + string  +              +
++-----------------------------+------------------------------------------+-----------+---------+--------------+
++ server.keyPairFingerprint   + Key pair fingerprint for the server      + Yes       + string  +              +
++-----------------------------+------------------------------------------+-----------+---------+--------------+
++ log.backend                 + Log backend type for the single sign-on  + No        + string  + FileBackend  +
++                             + logger                                   +           +         +              +
++-----------------------------+------------------------------------------+-----------+---------+--------------+
++ log.backendOptions          + Log backend options for the single       + No        + array   + see Settings +
++                             + sign-on logger                           +           +         +              +
++-----------------------------+------------------------------------------+-----------+---------+--------------+
++ log.logRequestSigning       + Controls logging of signed requests via  + No        + boolean + FALSE        +
++                             + an aspect (for debugging)                +           +         +              +
++-----------------------------+------------------------------------------+-----------+---------+--------------+
++ accountMapper.configuration + Serialization of account data for client + No        + array   + NULL         +
++                             + account mapping in the default           +           +         +              +
++                             + SimpleClientAccountMapper_.              +           +         +              +
++-----------------------------+------------------------------------------+-----------+---------+--------------+
 
 .. note:: The package configuration also configures some settings for TYPO3 Flow. For the signed requests a security firewall
    filter with the name `ssoServerSignedRequests` is configured. This filter can be modified or removed in another
    package configuration or global configuration.
-
-.. index::
-   single: Server; Commands
-   single: Command; ssoserver:registerclient
 
 Caches
 ^^^^^^
@@ -120,8 +120,14 @@ Caches
 A special cache with the identifier `Flowpack_SingleSignOn_Server_AccessToken_Storage` is used for the storage
 of `Access tokens`_. It defaults to a `FileBackend` as the cache backend.
 
+.. index::
+   single: Server; Commands
+
 Commands
 -----------------------
+
+.. index::
+   single: Command; ssoserver:registerclient
 
 ssoserver:registerclient
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -151,6 +157,30 @@ The key pair has to be created on the instance using the `ssokey:generatekeypair
 .. code-block:: bash
 
     $ ./flow ssoserver:registerclient --base-uri http://ssoinstance.local/sso/ --public-key c1285a470f0fc8f14f54851c5d8eb32f
+
+.. index::
+   single: Command; ssoserver:removeexpiredaccesstokens
+
+ssoserver:removeexpiredaccesstokens
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `ssoserver:removeexpiredaccesstokens` command cleans up expired `access tokens`_ from the underlying cache backend.
+
+::
+
+    Remove expired access tokens
+
+    COMMAND:
+      flowpack.singlesignon.server:ssoserver:removeexpiredaccesstokens
+
+    USAGE:
+      ./flow ssoserver:removeexpiredaccesstokens
+
+    DESCRIPTION:
+      This will remove all expired access tokens that were not redeemed from the underlying storage.
+      This command should be executed in regular intervals for cleanup.
+
+This command should be executed in regular intervals (e.g. using a cron task) to clean up the access token storage.
 
 .. index::
    single: Server; Logging
@@ -276,11 +306,15 @@ Access tokens are stored in a cache backend `Flowpack_SingleSignOn_Server_Access
 configuration_ uses a `FileBackend`. The cache backend allows for a flexible and lightweight storage of access tokens
 with automatic expiration and garbage collection.
 
-TODO Check how garbage collection of access token entries could work
+The server package provides a `ssoserver:removeexpiredaccesstokens` command for the maintenance of the cache backend
+that will remove expired access tokens that were not redeemed. This command should be executed in regular intervals
+for garbage collection of the cache backend.
 
 .. index::
    single: Server; Access token redemption
    single: Server; Redeem access token
+
+.. _redeem access token:
 
 Access token redemption
 -----------------------
@@ -300,8 +334,12 @@ With a valid access token the server will:
 * get the original session identifier and account from the access token
 * invalidate (remove) the access token
 * register the single sign-on client in the session for `Client notification`_
-* perform `Account mapping`_ to transform the server account into authentication and authorization information for the client
-* respond with a JSON representation of the mapped account
+* perform `Account mapping`_ to transform the server account into authentication and authorization information for the
+  client
+* respond with a JSON representation of the mapped account and the server session identifier
+
+The client will transform the returned account data into a local account (persistent or transient) using a
+`global account mapper` and authenticate this account locally.
 
 .. note:: The redeem access token request is not public and is guarded by a signed request filter by default.
    Additional measures to secure this channel should be installed in production environments.
@@ -336,20 +374,162 @@ and client instance can be implemented:
 
    }
 
-A basic implementation of a client account mapper is shipped with the `SimpleClientAccountMapper` class.
+The `getAccountData` method has to return the serialized account information based on the given single sign-on client
+and account object. It is possible to differentiate between clients and return different account information depending
+on the client with this approach.
 
-TODO Continue here...
+.. index::
+   single: Server; SimpleClientAccountMapper
+
+SimpleClientAccountMapper
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A basic implementation of a client account mapper is included in the server package with the `SimpleClientAccountMapper`
+class and will be used by default.
+
+*Example account data:*
+
+.. code-block:: yaml
+
+    accountIdentifier: 'jdoe'
+    roles: ['Vendor.MyPackage:User']
+    party:
+      __type: 'Vendor\MyPackage\ExampleParty'
+      company: 'Acme Inc.'
+
+The `accountIdentifier` and `roles` keys are always returned and do not need any configuration.
+
+The implementation will serialize the party properties according to the `configuration` property which is configurable via the
+`Flowpack.SingleSignOn.Server.accountMapper.configuration` setting.
+
+The default configuration will handle the party type `Person` and returns all simple properties including the name:
+
+.. code-block:: php
+
+    array(
+    	'party' => array(
+    		'_exposeType' => TRUE,
+    		'_descend' => array('name' => array())
+    	)
+    );
+
+For any other party implementation it will just return accessible properties directly under the party object, so for
+relational party data a custom configuration has to be given.
+
+It is important that the type of the party is exposed as the key `__type` for the default implementation of the
+`global account mapper`_ on the client (class `SimpleGlobalAccountMapper`).
+
+.. note:: The exchange of account data is deliberately unconstrained to allow for a fully flexible exchange of data. But the
+   implementation of the `ClientAccountMapperInterface` on the server and `GlobalAccountMapperInterface` on the client
+   have to match in terms of the exported and expecteded properties.
+
+.. index::
+   single: Server; Client notification
+   single: Single sign-off
+
+.. _Single sign-off:
 
 Client notification
 -----------------------
 
+The client notification is used to destroy sessions remotely by a server-side request to the client.
+This is mainly used for synchronized logout (*Single sign-off*) and account switching on the server.
+
+The server declares a `SsoClientNotifierInterface` interface for this purpose and provides two implementations using
+a synchronous (`SimpleSsoClientNotifier`) and parallel (`ParallelSsoClientNotifier`) strategy for the HTTP requests.
+The `SimpleSsoClientNotifier` is the default implementation configured in the server package `Objects.yaml`. In scenarios
+that register a lot of instances for one session the `ParallelSsoClientNotifier` can reduce the latency on logout or
+account switching by using parallel HTTP requests with a multi-threading engine.
+
+A destroyed session on the client will require authentication through the single sign-on mechanism on the next request
+to a secured resource on the client. This ensures an updated authentication state on the instance.
+
+.. note:: The client notification will destroy all session data on the client. If the instance stores important
+   data in the session this data will be lost on logout or account switching on another instance or the server.
+
+.. index::
+   single: Session; Synchronization
+   single: Session; global
+   single: Session; local
+
 Session synchronization
 -----------------------
 
-Account management API
+The TYPO3 Flow session has a configurable interval for inactivity that is used to expire sessions after a certain
+time of inactivity on the next access or through garbage collection.
+
+In a single sign-on scenario we have to consider multiple Flow sessions (after authentication with at least one instance):
+
+* One *global* session on the single sign-on server
+* One ore more *local* sessions on the instances
+
+The server and instances could have different inactivity timeouts configured for the Flow session which leads to an
+effect where the user is still authenticated on the client but the server session is already expired due to inactivity
+(for most scenarios the user will access the server very infrequently). It is desirable that the session lifetime is
+synchronized in a single sign-on setup, such that an expired session on the server will also expire the session on the
+instances.
+
+The Flowpack single sign-on solution does use a regular *touch* on the *global* session from the client through a
+special server-side signed request. The interval and frequency is configurable for the single sign-on client.
+
+The server will respond with an error code `SessionNotFound` if the session was not found / inactive and the client will
+mark the authentication token as no longer authenticated.
+
+.. index::
+   single: Account; Impersonation
+
+Account impersonation
 -----------------------
+
+The `authentication endpoint`_ gets the current account that should be passed to the instance through the `AccountManager`
+service, which is implemented in the server package.
+
+The method `impersonateAccount` allows to *impersonate* another account that will be visible as the globally authenticated
+account. The original account is still authenticated on the server which allows to switch back to the original or yet another
+account. As in the case of re-authentication on the server all registered client sessions are destroyed on impersonation.
+
+This feature could be used to implement multi-tenant applications where one global account is able to use multiple
+other accounts and the user should be able to select the currently active account.
+
+.. note:: A single sign-on server UI should always use the methods in `AccountManager` to get the currently active
+   account (through `getServerAccount` or `getImpersonatedAccount`) to display authentication information.
+
+
+.. index::
+   single: Server; HTTP services
 
 HTTP services
 -----------------------
+
+This is a list of all HTTP services (controller actions) that are exposed by the server. The URI path depends on the
+global Routes.yaml that mounts the package subroutes, we expect the routes to be mounted at `/sso/<SingleSignOnSubroutes>`.
+
+Public
+^^^^^^^^^^
+
+`/sso/authentication`
+    Route for the `authentication endpoint`_, has to be accessible for all users that should authenticate
+    using the single sign-on.
+
+Private
+^^^^^^^^^^
+
+The controller for these routes are protected by a signed request firewall filter and should only be accessible by
+instances. We strongly suggest to take additional measures for securing the server-side channel between the server
+and instances (e.g. SSL with client certificates, firewall rules, additional request filter).
+
+.. warning:: The default TYPO3 Flow routes could allow access to controller actions even though the URI paths are secured
+   by a firewall or webserver configuration.
+
+`/sso/token/{accessToken}/redeem`
+    Route for the `access token redemption`_, is used by the single sign-on client to verify the
+    access token and to exchange it for account data and the global session identifier.
+
+`session/{sessionId}/touch`
+    Route for the `session synchronization`_ by allowing a client to touch the global session in regular intervals
+    and get feedback about the session status.
+
+`session/{sessionId}/destroy`
+    Route for the `single sign-off`_ to destroy the global session when a user logs out on an instance.
 
 .. _possible redirection attack: https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards
