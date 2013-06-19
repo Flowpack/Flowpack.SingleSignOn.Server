@@ -31,7 +31,8 @@ This is a schematic view of the single sign-on server components:
    single: Server; Key pair
 
 Server key pair
-    The server has a *public / private key pair*
+    The server has a *public / private key pair* for encryption and verification of requests. The public key is shared
+    with all instances that should access the server.
 
 .. index::
    single: Server; Service base URI
@@ -110,7 +111,7 @@ The `Flowpack.SingleSignOn.Server` package provides the following default config
 +                             + SimpleClientAccountMapper_.              +           +         +              +
 +-----------------------------+------------------------------------------+-----------+---------+--------------+
 
-.. note:: The package configuration also configures some settings for TYPO3 Flow. For the signed requests a security firewall
+.. note:: The package also configures some settings for TYPO3 Flow. For the signed requests a security firewall
    filter with the name `ssoServerSignedRequests` is configured. This filter can be modified or removed in another
    package configuration or global configuration.
 
@@ -119,6 +120,27 @@ Caches
 
 A special cache with the identifier `Flowpack_SingleSignOn_Server_AccessToken_Storage` is used for the storage
 of `Access tokens`_. It defaults to a `FileBackend` as the cache backend.
+
+Routes
+^^^^^^
+
+The routes of the server package have to be registered in the global `Routes.yaml`:
+
+.. code-block:: yaml
+
+    ##
+    # Flowpack.SingleSignOn.Server subroutes
+    #
+
+    -
+      name: 'SingleSignOn'
+      uriPattern: 'sso/<SingleSignOnSubroutes>'
+      subRoutes:
+        SingleSignOnSubroutes:
+          package: Flowpack.SingleSignOn.Server
+
+The path `sso/` can be freely chosen but will be part of the server service base URI that needs to be configured in the
+client configuration on a single sign-on instance.
 
 .. index::
    single: Server; Commands
@@ -211,6 +233,8 @@ The logger interface can be injected in any package to log into the same destina
 .. index::
    single: Server; Client registration
    single: Client; Registration
+
+.. _Client registration:
 
 Client registration
 -----------------------
@@ -428,6 +452,7 @@ It is important that the type of the party is exposed as the key `__type` for th
    single: Single sign-off
 
 .. _Single sign-off:
+.. _Client notification:
 
 Client notification
 -----------------------
@@ -451,6 +476,8 @@ to a secured resource on the client. This ensures an updated authentication stat
    single: Session; Synchronization
    single: Session; global
    single: Session; local
+
+.. _Session synchronization:
 
 Session synchronization
 -----------------------
