@@ -91,7 +91,9 @@ class EndpointControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'create' => $mockSsoServer
 		));
 		$this->inject($controller, 'ssoServerFactory', $mockSsoServerFactory);
-		$mockAuthenticationManager = m::mock('TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface');
+		$mockAuthenticationManager = m::mock('TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface', array(
+			'isAuthenticated' => TRUE
+		));
 		$this->inject($controller, 'authenticationManager', $mockAuthenticationManager);
 		$mockAccount = m::mock('TYPO3\Flow\Security\Account');
 		$mockAccountManager = m::mock('Flowpack\SingleSignOn\Server\Service\AccountManager', array(

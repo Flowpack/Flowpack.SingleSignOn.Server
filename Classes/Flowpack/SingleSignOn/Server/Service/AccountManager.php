@@ -74,12 +74,21 @@ class AccountManager {
 	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return void
 	 */
-	public function impersonateAccount(\TYPO3\Flow\Security\Account $account) {
-		$this->impersonatedAccount = $account;
+	public function impersonateAccount(\TYPO3\Flow\Security\Account $account = NULL) {
+		if ($this->impersonatedAccount !== $account) {
+			$this->impersonatedAccount = $account;
 
-		$this->destroyRegisteredClientSessions();
+			$this->destroyRegisteredClientSessions();
 
-		$this->emitAccountImpersonated($account);
+			$this->emitAccountImpersonated($account);
+		}
+	}
+
+	/**
+	 * @return \TYPO3\Flow\Security\Account The impersonated account or NULL if no account was impersonated
+	 */
+	public function getImpersonatedAccount() {
+		return $this->impersonatedAccount;
 	}
 
 	/**
