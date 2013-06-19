@@ -53,6 +53,8 @@ class SsoClient {
 	 * The client expects a local session id and not a global session id
 	 * from the SSO server.
 	 *
+	 * TODO Move code to SimpleSsoClientNotififer and only leave buildDestroySessionRequest in client
+	 *
 	 * @param \Flowpack\SingleSignOn\Server\Domain\Model\SsoServer $ssoServer
 	 * @param string $sessionId
 	 * @return void

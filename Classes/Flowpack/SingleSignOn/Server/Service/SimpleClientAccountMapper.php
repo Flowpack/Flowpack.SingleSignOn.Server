@@ -16,6 +16,9 @@ use TYPO3\Flow\Annotations as Flow;
 class SimpleClientAccountMapper implements ClientAccountMapperInterface {
 
 	/**
+	 * Account serialization configuration
+	 *
+	 * @see \TYPO3\Flow\Mvc\View\JsonView for configuration options
 	 * @var array
 	 */
 	protected $configuration = NULL;
