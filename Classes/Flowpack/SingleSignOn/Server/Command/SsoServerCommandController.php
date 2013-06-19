@@ -25,6 +25,12 @@ class SsoServerCommandController extends CommandController {
 
 	/**
 	 * @Flow\Inject
+	 * @var \Flowpack\SingleSignOn\Server\Domain\Repository\AccessTokenRepository
+	 */
+	protected $accessTokenRepository;
+
+	/**
+	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Security\Cryptography\RsaWalletServiceInterface
 	 */
 	protected $rsaWalletService;
@@ -32,7 +38,7 @@ class SsoServerCommandController extends CommandController {
 	/**
 	 * Add a client
 	 *
-	 * This command registers the specified client at the SSO server.
+	 * This command registers the specified client on the SSO server.
 	 *
 	 * @param string $baseUri The client base URI as the client identifier
 	 * @param string $publicKey The public key fingerprint (has to be imported using the RSA wallet service first)
@@ -49,6 +55,18 @@ class SsoServerCommandController extends CommandController {
 		$ssoClient->setServiceBaseUri($baseUri);
 		$ssoClient->setPublicKey($publicKey);
 		$this->ssoClientRepository->add($ssoClient);
+	}
+
+	/**
+	 * Remove expired access tokens
+	 *
+	 * This will remove all expired access tokens that were not redeemed from the underlying storage.
+	 * This command should be executed in regular intervals for cleanup.
+	 *
+	 * @return void
+	 */
+	public function removeExpiredAccessTokensCommand() {
+		$this->accessTokenRepository->removeExpiredAccessTokens();
 	}
 
 }

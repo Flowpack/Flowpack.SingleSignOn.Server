@@ -67,5 +67,13 @@ class AccessTokenRepository {
 		$this->cache->flush();
 	}
 
+	/**
+	 * Remove expired access tokens from persistence
+	 *
+	 * @return void
+	 */
+	public function removeExpiredAccessTokens() {
+		$this->cache->collectGarbage();
+	}
 }
 ?>
