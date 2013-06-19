@@ -5,12 +5,14 @@
 Flowpack:
   SingleSignOn:
     Server:
+
       # Server configuration
       server:
         # The service base URI for this server
         serviceBaseUri: ''
         # Mandatory key pair uuid (fingerprint) for the SSO server
         keyPairFingerprint: ''
+
       log:
         backend: TYPO3\Flow\Log\Backend\FileBackend
         backendOptions:
@@ -23,6 +25,9 @@ Flowpack:
 
         # Enable logging of request signing (all signed requests)
         logRequestSigning: FALSE
+
+      accountMapper:
+        configuration: ~
 
 TYPO3:
   Flow:

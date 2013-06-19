@@ -34,3 +34,8 @@ Flowpack\SingleSignOn\Server\Domain\Service\ParallelSsoClientNotifier:
         properties:
           timeout:
             value: 10
+
+Flowpack\SingleSignOn\Server\Service\SimpleClientAccountMapper:
+  properties:
+    configuration:
+      setting: Flowpack.SingleSignOn.Server.accountMapper.configuration
