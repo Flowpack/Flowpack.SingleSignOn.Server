@@ -318,6 +318,8 @@ public key and server private key.
 .. index::
    single: Server; Access token
 
+.. _Access tokens:
+
 Access tokens
 ^^^^^^^^^^^^^
 
@@ -339,6 +341,7 @@ for garbage collection of the cache backend.
    single: Server; Redeem access token
 
 .. _redeem access token:
+.. _Access token redemption:
 
 Access token redemption
 -----------------------
@@ -346,7 +349,6 @@ Access token redemption
 After the single sign-on client has verified the access token a server-side `signed request`_ is made to exchange the
 access token for the actual account data and *single sign-on session identifier*. This measure also prevents injection
 of arbitrary account data into the callback URI by breaking the signature.
-
 
 .. image:: Images/server-redeem-token.png
         :alt: Redeem an access token
@@ -404,6 +406,8 @@ on the client with this approach.
 
 .. index::
    single: Server; SimpleClientAccountMapper
+
+.. _SimpleClientAccountMapper:
 
 SimpleClientAccountMapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -552,11 +556,11 @@ and instances (e.g. SSL with client certificates, firewall rules, additional req
     Route for the `access token redemption`_, is used by the single sign-on client to verify the
     access token and to exchange it for account data and the global session identifier.
 
-`session/{sessionId}/touch`
+`/sso/session/{sessionId}/touch`
     Route for the `session synchronization`_ by allowing a client to touch the global session in regular intervals
     and get feedback about the session status.
 
-`session/{sessionId}/destroy`
+`/sso/session/{sessionId}/destroy`
     Route for the `single sign-off`_ to destroy the global session when a user logs out on an instance.
 
 .. _possible redirection attack: https://www.owasp.org/index.php/Top_10_2013-A10-Unvalidated_Redirects_and_Forwards
