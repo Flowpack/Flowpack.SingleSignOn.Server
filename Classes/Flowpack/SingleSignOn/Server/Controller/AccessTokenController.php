@@ -106,8 +106,6 @@ class AccessTokenController extends ActionController {
 			$this->ssoLogger->log('Redeemed access token "' . $accessToken . '" from client "' . $ssoClient->getServiceBaseUri() . '" for session "' . $sessionId . '" and account "' . $account->getAccountIdentifier() . '"', LOG_INFO);
 		}
 
-		$sessionBaseUri = $this->uriBuilder->uriFor('show', array('sessionId' => $sessionId), 'Session', 'Flowpack.SingleSignOn.Server', '');
-		$this->response->setHeader('Location', $sessionBaseUri);
 		$this->response->setStatus(201);
 
 		$this->view->assign('value', array(
