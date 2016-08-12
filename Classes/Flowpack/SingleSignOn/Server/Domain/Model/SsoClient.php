@@ -133,4 +133,3 @@ class SsoClient {
 		return $this->serviceBaseUri;
 	}
 }
-?>

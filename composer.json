@@ -1,32 +1,37 @@
 {
-	"name": "flowpack\/singlesignon-server",
-	"type": "typo3-flow-package",
-	"description": "TYPO3 SingleSignOn Server",
-	"license": ["MIT"],
-	"authors": [
-		{
-			"name": "Christopher Hlubek",
-			"email": "hlubek@networkteam.com",
-			"homepage": "http://www.networkteam.com",
-			"role": "Developer"
-		},
-		{
-			"name": "Robert Lemke",
-			"email": "rl@robertlemke.com",
-			"homepage": "http://robertlemke.com",
-			"role": "Developer"
-		}
-	],
-	"require": {
-		"typo3\/flow": "~2.0",
-		"flowpack\/singlesignon-client": "dev-master"
-	},
-	"require-dev": {
-		"mockery/mockery": "0.7.*"
-	},
-	"autoload": {
-		"psr-0": {
-			"Flowpack\\SingleSignOn\\Server": "Classes"
-		}
-	}
+    "name": "flowpack/singlesignon-server",
+    "type": "typo3-flow-package",
+    "description": "TYPO3 SingleSignOn Server",
+    "license": [
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Christopher Hlubek",
+            "email": "hlubek@networkteam.com",
+            "homepage": "http://www.networkteam.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Robert Lemke",
+            "email": "rl@robertlemke.com",
+            "homepage": "http://robertlemke.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "typo3/flow": "~3.0",
+        "typo3/party": "~3.0",
+        "flowpack/singlesignon-client": "dev-master"
+    },
+    "require-dev": {
+        "mockery/mockery": "0.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Flowpack\\SingleSignOn\\Server": "Classes"
+        }
+    },
+    "extra": {
+    }
 }

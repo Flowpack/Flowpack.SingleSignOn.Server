@@ -27,4 +27,3 @@ interface SsoClientNotifierInterface {
 		SsoServer $ssoServer, $sessionId, array $ssoClients);
 
 }
-?>

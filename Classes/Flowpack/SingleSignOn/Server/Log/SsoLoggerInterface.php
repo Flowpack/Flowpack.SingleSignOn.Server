@@ -14,4 +14,3 @@ use TYPO3\Flow\Log\LoggerInterface;
 interface SsoLoggerInterface extends LoggerInterface {
 
 }
-?>

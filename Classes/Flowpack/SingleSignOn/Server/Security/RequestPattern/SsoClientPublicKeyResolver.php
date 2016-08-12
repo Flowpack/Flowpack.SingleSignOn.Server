@@ -31,4 +31,3 @@ class SsoClientPublicKeyResolver implements \Flowpack\SingleSignOn\Client\Securi
 	}
 
 }
-?>

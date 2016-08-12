@@ -72,4 +72,3 @@ class ParallelSsoClientNotifier implements SsoClientNotifierInterface {
 	}
 
 }
-?>

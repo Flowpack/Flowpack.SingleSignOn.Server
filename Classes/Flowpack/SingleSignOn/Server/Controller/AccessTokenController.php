@@ -125,4 +125,3 @@ class AccessTokenController extends ActionController {
 	}
 
 }
-?>

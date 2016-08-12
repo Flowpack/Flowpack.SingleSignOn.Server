@@ -23,4 +23,3 @@ interface ClientAccountMapperInterface {
 	public function getAccountData(\Flowpack\SingleSignOn\Server\Domain\Model\SsoClient $ssoClient, \TYPO3\Flow\Security\Account $account);
 
 }
-?>

@@ -81,4 +81,3 @@ class SsoSessionManager {
 		$this->ssoClientNotifier->destroySession($ssoServer, $sessionId, $ssoClients);
 	}
 }
-?>

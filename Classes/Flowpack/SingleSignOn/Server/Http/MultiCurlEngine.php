@@ -159,4 +159,3 @@ class MultiCurlEngine implements \TYPO3\Flow\Http\Client\RequestEngineInterface 
 	}
 
 }
-?>
