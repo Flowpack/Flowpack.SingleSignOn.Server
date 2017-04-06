@@ -16,4 +16,3 @@ class ClientNotFoundException extends \Flowpack\SingleSignOn\Server\Exception {
 	protected $statusCode = 404;
 
 }
-?>

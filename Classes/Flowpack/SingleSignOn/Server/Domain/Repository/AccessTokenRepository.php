@@ -76,4 +76,3 @@ class AccessTokenRepository {
 		$this->cache->collectGarbage();
 	}
 }
-?>

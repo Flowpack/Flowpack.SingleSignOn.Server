@@ -149,4 +149,3 @@ class SimpleClientAccountMapper implements ClientAccountMapperInterface {
 	}
 
 }
-?>

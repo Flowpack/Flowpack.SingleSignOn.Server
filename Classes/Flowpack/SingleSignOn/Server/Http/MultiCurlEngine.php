@@ -5,7 +5,7 @@ namespace Flowpack\SingleSignOn\Server\Http;
  * This script belongs to the TYPO3 Flow package "Flowpack.SingleSignOn.Server". *
  *                                                                               */
 
-use TYPO3\Flow\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 use TYPO3\Flow\Http\Request,
 	TYPO3\Flow\Http\Response;
@@ -159,4 +159,3 @@ class MultiCurlEngine implements \TYPO3\Flow\Http\Client\RequestEngineInterface 
 	}
 
 }
-?>

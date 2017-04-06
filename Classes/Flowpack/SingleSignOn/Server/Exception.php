@@ -13,4 +13,3 @@ use TYPO3\Flow\Annotations as Flow;
 class Exception extends \TYPO3\Flow\Exception {
 
 }
-?>

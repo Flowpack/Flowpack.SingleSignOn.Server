@@ -71,4 +71,3 @@ class SsoServerCommandController extends CommandController {
 
 }
 
-?>

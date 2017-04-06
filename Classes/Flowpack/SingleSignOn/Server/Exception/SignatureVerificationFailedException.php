@@ -16,4 +16,3 @@ class SignatureVerificationFailedException extends \Flowpack\SingleSignOn\Server
 	protected $statusCode = 403;
 
 }
-?>

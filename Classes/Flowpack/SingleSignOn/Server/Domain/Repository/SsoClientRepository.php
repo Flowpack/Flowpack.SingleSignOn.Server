@@ -31,4 +31,3 @@ class SsoClientRepository extends Repository {
 	}
 
 }
-?>

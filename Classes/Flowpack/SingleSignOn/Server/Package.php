@@ -27,4 +27,3 @@ class Package extends \TYPO3\Flow\Package\Package {
 	}
 }
 
-?>

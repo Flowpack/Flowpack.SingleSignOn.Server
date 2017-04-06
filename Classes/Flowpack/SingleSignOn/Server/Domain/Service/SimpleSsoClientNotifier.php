@@ -40,4 +40,3 @@ class SimpleSsoClientNotifier implements SsoClientNotifierInterface {
 	}
 
 }
-?>
